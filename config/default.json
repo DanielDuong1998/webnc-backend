@@ -17,6 +17,6 @@
 	"foreignBank": {
 		"partnerCode": ["abc", "xyz"],
 		"secretSign": "secretSign",
-		"delayTime": 12000000
+		"delayTime": 120000000
 	}
 }

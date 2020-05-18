@@ -47,7 +47,7 @@ app.get('/', (req, res)=>{
 	});
 });
 
-app.use('/api/user', require('./routes/user.route'));
+app.use('/api/user', mdwFunc.verifyJWT, require('./routes/user.route'));
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
 /* nếu gọi các đường dẫn không được khai báo sẽ nhảy vào đây */
