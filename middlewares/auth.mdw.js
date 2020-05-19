@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256');
 const moment = require('moment'); // test time
+const NodeRSA = require('node-rsa');
 
 const config = require('../config/default.json');
 
@@ -151,25 +152,35 @@ const verifySign = (req, sign, timestamp, partnerCode)=>{
 }
 
 const verifyJWTf = (req, accessToken)=>{
-	let status = false;
-	if(accessToken) {
-		jwt.verify(accessToken, config.auth.secretPassword, function(err, payload){
-			console.log('payload: ', payload);
-			if(err) {
-				console.log('err: ', err);
-				status = false;
-			}
-			req.tokenPayload = payload;
-			status = true;
-		});
+	let ret = ({
+		status: -3,
+		msg: ''
+	});
+
+	if(accessToken === undefined){
+		ret.msg = 'do not find access token';
 	}
-	return status;
+
+	jwt.verify(accessToken, config.auth.secretPassword, function(err, payload){
+		console.log('payload: ', payload);
+		if(err) {
+			console.log('err: ', err);
+			ret.msg = 'accessToken err';
+		}
+		else {
+			req.tokenPayload = payload;
+			ret.status = 1;
+			ret.msg = 'success verify access token';
+		}
+	});
+	return ret;
 }
 
-const verifyForeignLogin = req=>{
+const verifyForeignLogin = req =>{
 	let partnerCode = req.headers['x-partner-code'];
 	let timestamp = req.headers['x-timestamp'];
 	let sign = req.headers['x-sign'];
+
 	let verify = verifyPartnerCode(partnerCode);
 	if(verify.status === -1){
 		return verify;
@@ -190,19 +201,39 @@ const verifyForeignLogin = req=>{
 	return verify;
 }
 
+const decryptRSA = (req)=>{
+	//rsaString  = req.body.rsaString
+	// bodyCrypt = ({
+	// 	soTienNapVao: 10000000
+	// });
+
+	let ret = ({
+		status: -5,
+		msg: ''
+	});
+	let { body } = req;
+	//let plKey = new NodeRSA(publicKey);
+	let pvKey = new NodeRSA(privateKey);
+	//let encryptString = plKey.encrypt(body, 'base64');
+	//console.log('strRSA: ', encryptString);
+	let str = body.rsaString;
+	let bodyDecrypt = pvKey.decrypt(str, 'utf8');
+	ret.status = 1;
+	ret.msg = 'success decrypt';
+	console.log('decrypt: ', JSON.parse(bodyDecrypt));
+	req.bodyDecrypt = JSON.parse(bodyDecrypt);
+	return ret;
+}
+
 module.exports = {
 	verifyJWT: (req, res, next) =>{
-		const accessToken = req.headers['x-access-token'];
+		let accessToken = req.headers['x-access-token'];
 		let verify = verifyJWTf(req, accessToken);
 		console.log('verify: ', verify);
-		if(verify === false){
+		if(verify.status === -4){
 			console.log('invalid token!');
-			return res.json({
-				status: -1,
-				msg: 'invalid token'
-			});
+			return res.json(verify);
 		}
-		console.log('req.tokenPayload: ', req.tokenPayload);
 		console.log('correct token');
 		next();
 	},
@@ -216,9 +247,28 @@ module.exports = {
 		test();
 
 		let verify = verifyForeignLogin(req);
-		console.log('verify', verify);
-		return res.json(verify);
+		if(verify.status === 1){
+			console.log('verify: ', verify);
+			next();
+		}
+		else {
+			return res.json(verify);
+		}
+	},
+	verifyRechargeForeign: (req, res, next)=>{
+		let accessToken = req.headers['x-access-token'];
+		let verify = verifyJWTf(req, accessToken);
+		console.log('verify: ', verify);
+		if(verify.status === -4){
+			console.log('invalid token!');
+			return res.json(verify);
+		}
 
+		verify = decryptRSA(req);
+		console.log('msg: ', verify.msg);
+		if(verify.status ==- -5){
+			return res.json(verify);
+		}
 		next();
 	}
 };

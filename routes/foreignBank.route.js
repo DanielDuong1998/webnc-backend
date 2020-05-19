@@ -9,6 +9,7 @@ const userModel = require('../models/user.model');
 require('express-async-errors');
 
 const config = require('../config/default.json');
+const mdwFunc = require('../middlewares/auth.mdw');
 
 
 const router = express.Router();
@@ -74,6 +75,37 @@ router.post('/auth-refresh', async(req, res)=>{
 		res.json({ accessToken });
  	});
  });
+
+
+router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
+	// req.body = { rsaString: "ádfasjdfaks"}
+	//req.bodyDecrypt = {soTien: 10000000}
+
+	let { soTien } = req.bodyDecrypt;
+	if(soTien === undefined){
+		return res.json({
+			status: -6,
+			msg: 'do not find field soTien'
+		});
+	}
+
+	if(Number.isNaN(soTien)){
+		return res.json({
+			status: -6,
+			msg: 'field soTien is not a number'
+		});
+	}
+
+	if(soTien <= config.foreignBank.minimumMoney){
+		return res.json({
+			status: -6,
+			msg: `soTien could not be smaller ${config.foreignBank.minimumMoney}`
+		});
+	}
+	
+	res.json(req.bodyDecrypt);
+
+});
 
 
 // generate AccessToken
