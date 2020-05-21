@@ -27,5 +27,10 @@ module.exports = {
 		const sql = `select refresh_token from user_refresh_token where Id = ${userId}`;
 		const rows = await db.load(sql);
 		return rows[0];
+	},
+	addMoney: async(userId, soTien)=>{
+		const sql = `update user set so_du_hien_tai = so_du_hien_tai + ${soTien} where id_tai_khoan = ${userId}`;
+		const row = await db.load(sql);
+		return row;
 	}
 }

@@ -2,6 +2,9 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const createError = require('http-errors');
 const randToken = require('rand-token');
+const moment = require('moment');
+const NodeRSA = require('node-rsa');
+
 const foreignBankModel = require('../models/foreignBank.model');
 const authModel = require('../models/auth.model');
 const userModel = require('../models/user.model');
@@ -9,6 +12,7 @@ const userModel = require('../models/user.model');
 require('express-async-errors');
 
 const config = require('../config/default.json');
+const rsaKey = require('../config/RSAKey');
 const mdwFunc = require('../middlewares/auth.mdw');
 
 
@@ -26,7 +30,7 @@ router.post('/auth', async(req, res)=>{
 	// 	"body.stk_thanh_toan": "123456789",
 	// 	"ma_pin": "123456"
 	// }
-
+	
 	const ret = await authModel.login(req.body);
 
 	if(ret === null){
@@ -79,9 +83,9 @@ router.post('/auth-refresh', async(req, res)=>{
 
 router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	// req.body = { rsaString: "ádfasjdfaks"}
-	//req.bodyDecrypt = {soTien: 10000000}
+	//req.body = {soTien: 10000000}
 
-	let { soTien } = req.bodyDecrypt;
+	let { soTien } = req.body;
 	if(soTien === undefined){
 		return res.json({
 			status: -6,
@@ -102,9 +106,22 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 			msg: `soTien could not be smaller ${config.foreignBank.minimumMoney}`
 		});
 	}
-	
-	res.json(req.bodyDecrypt);
+	let { userId } = req.tokenPayload;
+	let result = await userModel.addMoney(userId, soTien);
+	console.log('result: ', result);
 
+	let privateKeyStr = rsaKey.privateKey();
+	let privateKey = new NodeRSA(privateKeyStr);
+	let ts = moment().format('YYYY-MM-DD HH:mm:ss');
+	let rsaSign = privateKey.sign(ts, 'base64', 'utf8');
+
+	res.json({
+		timeStamp: ts,
+		rsaSign: rsaSign,
+		status: 1,
+		msg: 'completed add money'
+	});
+	console.log('res: ', res);
 });
 
 
