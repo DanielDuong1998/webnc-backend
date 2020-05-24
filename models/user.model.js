@@ -4,6 +4,7 @@ const db = require('../utils/db');
 module.exports = {
 	all: _=> db.load('SELECT * FROM user'),
 	singleByStkTT: stkTT => db.load(`select * from user where stk_thanh_toan = '${stkTT}'`),
+	singleForeignByStkTT: stkTT => db.load(`select ten from user where stk_thanh_toan = ${stkTT}`),
 	updateRefreshToken: async (userId, token) =>{
 		await db.del({Id: userId}, 'user_refresh_token');
 
@@ -23,13 +24,13 @@ module.exports = {
 		
 		return false;
 	},
-	refreshTokenById: async(userId) =>{ // tra ve refreshToken theo id
+	refreshTokenById: async (userId) =>{ // tra ve refreshToken theo id
 		const sql = `select refresh_token from user_refresh_token where Id = ${userId}`;
 		const rows = await db.load(sql);
 		return rows[0];
 	},
-	addMoney: async(userId, soTien)=>{
-		const sql = `update user set so_du_hien_tai = so_du_hien_tai + ${soTien} where id_tai_khoan = ${userId}`;
+	addMoney: async(stkTT, soTien)=>{
+		const sql = `update user set so_du_hien_tai = so_du_hien_tai + ${soTien} where stk_thanh_toan = ${stkTT}`;
 		const row = await db.load(sql);
 		return row;
 	}

@@ -12,6 +12,7 @@ router.post('/auth', async(req, res)=>{
 	res.json({
 		msg: 'authentication account'
 	})
-})
+});
+
 
 module.exports = router;
