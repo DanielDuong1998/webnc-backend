@@ -42,7 +42,7 @@ app.use(function(err, req, res, next){
 const PORT = 3000;
 app.listen(process.env.PORT || PORT, _=>{
 	if(process.env.PORT){
-		console.log(`API is running at https://smartbanking.herokuapp.com`);
+		console.log(`API is running at https://smartbankinghk.herokuapp.com`);
 	}
 	else console.log(`API is running at http://localhost:${PORT}`);
 })
