@@ -1,4 +1,7 @@
 const express = require('express');
+const moment = require('moment'); // test time
+const momentTz = require('moment-timezone');
+
 const userModel = require('../models/user.model');
 
 const router = express.Router();
@@ -17,7 +20,15 @@ router.post('/', async(req, res)=>{
 
     let stk_thanh_toan = await generateStkTT();
     req.body.stk_thanh_toan = stk_thanh_toan;
+
+    let ngay_tao = moment().format('YYYY-MM-DD');
+	ngay_tao = momentTz(ngay_tao).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
+	req.body.ngay_tao = ngay_tao;
+
     let result = await userModel.add(req.body);
+
+
+
     let ret = ({
     	status: 1,
     	id_tai_khoan: result.insertId,

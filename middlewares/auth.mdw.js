@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256');
 const moment = require('moment'); // test time
+const momentTz = require('moment-timezone');
 const NodeRSA = require('node-rsa');
 
 const config = require('../config/default.json');
@@ -65,7 +66,13 @@ const verifyTime = timestamp=>{
 
 	// chưa đổi múi giờ
 	let currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-	let delayTime = moment(currentTime).diff(moment(timestamp));
+
+	// đổi sang múi giờ việt nam
+	let timestampTZ = momentTz(timestamp).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	let currentTimeTZ = momentTz(currentTime).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+
+	let delayTime = moment(currentTimeTZ).diff(moment(timestampTZ));
+
 	console.log('delayTime: ', delayTime);
 	if(delayTime > config.foreignBank.delayTime){
 		ret.msg = 'The package was expired';
