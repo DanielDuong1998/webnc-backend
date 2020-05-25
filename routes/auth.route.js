@@ -38,12 +38,13 @@ router.post('/', async(req, res)=>{
 	}
 
 	res.json({
+		status: 1,
 		accessToken,
-		'refreshToken' : refresh_token,
+		refreshToken : refresh_token,
 		ten: ret.ten,
 		stkThanhToan: ret.stk_thanh_toan,
 		soDuHienTai: ret.so_du_hien_tai
-	})
+	});
 });
 
 

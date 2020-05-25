@@ -4,10 +4,6 @@ const morgan = require('morgan');
 const createError = require('http-errors');
 require('express-async-errors');
 
-const NodeRSA = require('node-rsa'); // test rsa
-const moment = require('moment'); // test time
-const bcrypt = require('bcrypt'); //test  bcrypt
-
 const mdwFunc = require('./middlewares/auth.mdw');
 
 const app = express();
@@ -22,8 +18,9 @@ app.get('/', (req, res)=>{
 	});
 });
 
+app.use('/api/user', require('./routes/user.route'));
 app.use('/api/auth', require('./routes/auth.route'));
-app.use('/api/user', mdwFunc.verifyJWT, require('./routes/user.route'));
+
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
 

@@ -12,12 +12,12 @@
 	"auth": {
 		"secretPassword": "secretKey",
 		"refreshTokenSize": 80,
-		"expiresIn": "1000m"
+		"expiresIn": "10m"
 	},
 	"foreignBank": {
 		"partnerCode": ["abc", "xyz"],
 		"secretSign": "secretSign",
-		"delayTime": 120000000,
+		"delayTime": 300000,
 		"minimumMoney": 50000
 	}
 }

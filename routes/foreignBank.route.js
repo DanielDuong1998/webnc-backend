@@ -97,6 +97,7 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	let rsaSign = privateKey.sign(ts, 'base64', 'utf8');
 
 	res.json({
+		status: 1,
 		timeStamp: ts,
 		rsaSign: rsaSign,
 		status: 1,

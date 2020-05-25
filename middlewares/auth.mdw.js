@@ -66,6 +66,7 @@ const verifyTime = timestamp=>{
 	// chưa đổi múi giờ
 	let currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
 	let delayTime = moment(currentTime).diff(moment(timestamp));
+	console.log('delayTime: ', delayTime);
 	if(delayTime > config.foreignBank.delayTime){
 		ret.msg = 'The package was expired';
 		return ret;

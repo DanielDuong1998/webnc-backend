@@ -1,8 +1,15 @@
 const moment = require('moment');
+const bcrypt = require('bcryptjs');
 const db = require('../utils/db');
 
 module.exports = {
 	all: _=> db.load('SELECT * FROM user'),
+	add: entity =>{
+		const hash = bcrypt.hashSync(entity.ma_pin, 8);
+		entity.ma_pin = hash;
+		console.log('hash: ', hash);
+		return db.add(entity, 'user');
+	},
 	singleByStkTT: stkTT => db.load(`select * from user where stk_thanh_toan = '${stkTT}'`),
 	singleForeignByStkTT: stkTT => db.load(`select ten from user where stk_thanh_toan = ${stkTT}`),
 	updateRefreshToken: async (userId, token) =>{
@@ -23,6 +30,13 @@ module.exports = {
 			return true;
 		
 		return false;
+	},
+	verifyEntityInfo: async(entity) =>{ // nếu đã tồn tại thông tin của entity, trả về false, nếu thông tin chưa tồn tại trả về true
+		const rows = await db.getRow('id_tai_khoan', 'user', entity);
+		if(rows.length > 0){
+			return false
+		}
+		return true;
 	},
 	refreshTokenById: async (userId) =>{ // tra ve refreshToken theo id
 		const sql = `select refresh_token from user_refresh_token where Id = ${userId}`;
