@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const createError = require('http-errors');
+const moment = require('moment');
 require('express-async-errors');
 
 const mdwFunc = require('./middlewares/auth.mdw');

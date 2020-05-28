@@ -1,16 +1,20 @@
 const express = require('express');
 const moment = require('moment'); // test time
 const momentTz = require('moment-timezone');
+const bcrypt = require('bcryptjs');
 
 const userModel = require('../models/user.model');
+const authModel = require('../models/auth.model');
 
 const router = express.Router();
 
 router.get('/', async (req, res)=> {
-	const ret = await user.all();
+	const ret = await userModel.all();
 	res.json(ret);
 });
 
+
+//tạo tài khoản
 router.post('/', async(req, res)=>{
     let verify = await verifyInfoSignUp(req);
     console.log('verify: ', verify);
@@ -41,11 +45,45 @@ router.post('/', async(req, res)=>{
     
 });
 
+
+//đổi mât khẩu
+router.put('/password', async(req, res)=>{
+	// body = ({
+	// 	stk_thanh_toan: "123456789",
+	// 	ma_pin: "123456",
+	// 	ma_pin_moi: "654321"
+	// })
+	let stk_thanh_toan = req.body.stk_thanh_toan;
+	let ma_pin = req.body.ma_pin;
+	let ma_pin_moi = req.body.ma_pin_moi;
+
+	let entity = ({
+		stk_thanh_toan,
+		ma_pin
+	});
+	let row = await authModel.login(entity);
+	if(row === null){
+		return res.json({
+			status: -1,
+			msg: 'the password is incorrect'
+		});
+	}
+	const hash = bcrypt.hashSync(ma_pin_moi, 8);
+	ma_pin_moi = hash;
+	let r = await userModel.changePw(ma_pin_moi, stk_thanh_toan);
+
+	res.json({
+		status: 1,
+		msg: 'The password change success!'
+	});
+});
+
 router.post('/auth', async(req, res)=>{
 	res.json({
 		msg: 'authentication account'
 	})
 });
+
 
 const generateStkTT = async _=> {
 	let stk = '';

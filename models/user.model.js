@@ -47,5 +47,10 @@ module.exports = {
 		const sql = `update user set so_du_hien_tai = so_du_hien_tai + ${soTien} where stk_thanh_toan = ${stkTT}`;
 		const row = await db.load(sql);
 		return row;
+	},
+	changePw: async(ma_pin, stk_thanh_toan) => {
+		const sql = `update user set ma_pin = '${ma_pin}' where stk_thanh_toan = '${stk_thanh_toan}'`;
+		const row = await db.load(sql);
+		return row;
 	}
 }
