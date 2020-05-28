@@ -4,20 +4,20 @@
 		"connectTimeout"  : 3600000,
 	    "acquireTimeout"  : 3600000,
 	    "timeout"         : 3600000,
-		"host": "db4free.net",
-		"password": "123123123",
-		"user": "internetbanking1", 
-		"database": "internetbanking1"
+		"host": "sql12.freemysqlhosting.net",
+		"password": "EnDxSX2yLw",
+		"user": "sql12342920", 
+		"database": "sql12342920"
 	},
 	"auth": {
 		"secretPassword": "secretKey",
 		"refreshTokenSize": 80,
-		"expiresIn": "1000m"
+		"expiresIn": "10m"
 	},
 	"foreignBank": {
 		"partnerCode": ["abc", "xyz"],
 		"secretSign": "secretSign",
-		"delayTime": 120000000,
+		"delayTime": 300000,
 		"minimumMoney": 50000
 	}
 }

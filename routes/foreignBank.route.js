@@ -1,12 +1,8 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const createError = require('http-errors');
-const randToken = require('rand-token');
 const moment = require('moment');
 const NodeRSA = require('node-rsa');
 
 const foreignBankModel = require('../models/foreignBank.model');
-const authModel = require('../models/auth.model');
 const userModel = require('../models/user.model');
 
 require('express-async-errors');
@@ -24,91 +20,76 @@ router.get('/', async (req, res)=> {
 	res.json(ret);
 });
 
-//login
-router.post('/auth', async(req, res)=>{
-	// req.body = {
-	// 	"body.stk_thanh_toan": "123456789",
-	// 	"ma_pin": "123456"
-	// }
-	
-	const ret = await authModel.login(req.body);
 
-	if(ret === null){
+router.post('/info', async(req, res) =>{
+	let { stk_thanh_toan } = req.body;
+	if(stk_thanh_toan === undefined){
 		return res.json({
-			authenticated: false
+			status: -4,
+			msg: 'do not find stk'
 		});
 	}
 
-	const userId = ret.id_tai_khoan;
-	const accessToken = generateAccessToken(userId);
-
-	var { refresh_token } = await userModel.refreshTokenById(userId);
-	
-	//neu refreshToken khong co san tu truoc, generate refresh token va add vao db
-	if(refresh_token === undefined){
-		refresh_token = randToken.generate(config.auth.refreshTokenSize);
-		await userModel.updateRefreshToken(userId, refresh_token);
+	let row = await userModel.singleForeignByStkTT(stk_thanh_toan);
+	if(row.length === 0){
+		return res.json({
+			status: -5,
+			msg: 'stk is invalid'
+		});
 	}
 
+	console.log('row: ', row[0]);
 	res.json({
-		accessToken,
-		'refreshToken' : refresh_token,
-		ten: ret.ten,
-		stkThanhToan: ret.stk_thanh_toan,
-		soDuHienTai: ret.so_du_hien_tai
-	})
+		status: 1,
+		ten: row[0].ten
+	});
 });
 
 
-//refresh token
-router.post('/auth-refresh', async(req, res)=>{
- 	// req.body = {
- 	// 	accessToken,
- 	// 	refreshToken
- 	// }
-
- 	jwt.verify(req.body.accessToken, config.auth.secretPassword, {ignoreExpiration: true}, async function(err, payload){
- 		const {userId} = payload;
- 		const ret = await userModel.verifyRefreshToken(userId, req.body.refreshToken);
- 		if(ret === false){
- 			//throw createError(400, 'Invalid refresh token.');
- 			return res.status(400).json({msg: 'Invalid refresh token.'});
- 		}
-
- 		const accessToken = generateAccessToken(userId);
-		res.json({ accessToken });
- 	});
- });
-
-
 router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
-	// req.body = { rsaString: "ádfasjdfaks"}
-	//req.body = {soTien: 10000000}
+	// req.body = {
+	// 	stk_thanh_toan: 123456789,
+	// 	soTien: 10000000
+	// }
 
-	let { soTien } = req.body;
-	if(soTien === undefined){
+	let { stk_thanh_toan, soTien } = req.body;
+	if(stk_thanh_toan === undefined){
+		return res.json({
+			status: -5,
+			msg: 'do not find stk_thanh_toan'
+		});
+	}
+
+	let row = await userModel.singleForeignByStkTT(stk_thanh_toan);
+	if(row.length === 0){
 		return res.json({
 			status: -6,
+			msg: 'stk is invalid'
+		});
+	}
+
+	if(soTien === undefined){
+		return res.json({
+			status: -7,
 			msg: 'do not find field soTien'
 		});
 	}
 
 	if(Number.isNaN(soTien)){
 		return res.json({
-			status: -6,
+			status: -8,
 			msg: 'field soTien is not a number'
 		});
 	}
 
 	if(soTien <= config.foreignBank.minimumMoney){
 		return res.json({
-			status: -6,
+			status: -9,
 			msg: `soTien could not be smaller ${config.foreignBank.minimumMoney}`
 		});
 	}
-	let { userId } = req.tokenPayload;
-	let result = await userModel.addMoney(userId, soTien);
-	console.log('result: ', result);
+
+	let result = await userModel.addMoney(stk_thanh_toan, soTien);
 
 	let privateKeyStr = rsaKey.privateKey();
 	let privateKey = new NodeRSA(privateKeyStr);
@@ -116,23 +97,13 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	let rsaSign = privateKey.sign(ts, 'base64', 'utf8');
 
 	res.json({
+		status: 1,
 		timeStamp: ts,
 		rsaSign: rsaSign,
 		status: 1,
 		msg: 'completed add money'
 	});
-	console.log('res: ', res);
 });
 
-
-// generate AccessToken
-const generateAccessToken = userId =>{
-	const payload = { userId };
-
-	const accessToken = jwt.sign(payload, config.auth.secretPassword, {
-		expiresIn: config.auth.expiresIn //10mins 
-	});
-	return accessToken;
-}
 
 module.exports = router;
