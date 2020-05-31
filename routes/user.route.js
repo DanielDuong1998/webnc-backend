@@ -13,8 +13,6 @@ router.get('/', async (req, res)=> {
 	res.json(ret);
 });
 
-
-
 //tạo tài khoản
 router.post('/', async(req, res)=>{
     let verify = await verifyInfoSignUp(req);
