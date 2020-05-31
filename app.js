@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const createError = require('http-errors');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
+const bodyparser = require('body-parser');
 require('express-async-errors');
 
 const mdwFunc = require('./middlewares/auth.mdw');
@@ -12,6 +13,8 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(cors());
+app.use(bodyparser.json());
+app.user(bodyparser.urlencoded({extended: true}));
 app.use(express.json());
 
 const transporter = nodemailer.createTransport('smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com');
