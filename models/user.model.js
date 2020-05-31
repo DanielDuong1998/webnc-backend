@@ -1,4 +1,5 @@
 const moment = require('moment');
+const momentTz = require('moment-timezone');
 const bcrypt = require('bcryptjs');
 const db = require('../utils/db');
 
@@ -12,13 +13,18 @@ module.exports = {
 	},
 	singleByStkTT: stkTT => db.load(`select * from user where stk_thanh_toan = '${stkTT}'`),
 	singleForeignByStkTT: stkTT => db.load(`select ten from user where stk_thanh_toan = ${stkTT}`),
+	idByStkTT: stkTT => db.load(`select id_tai_khoan from user where stk_thanh_toan = '${stkTT}'`),
+	idtkEmailNameByStkTT: async (stkTT)=>{
+		return db.load(`select id_tai_khoan, email, ten from user where stk_thanh_toan = '${stkTT}'`);
+	},
 	updateRefreshToken: async (userId, token) =>{
 		await db.del({Id: userId}, 'user_refresh_token');
-
+		let rdt = moment().format('YYYY-MM-DD HH:mm:ss');
+		rdt = momentTz(rdt).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 		const entity = {
 			Id: userId,
 			refresh_token: token,
-			rdt: moment().format('YYYY-MM-DD HH:mm:ss')
+			rdt: rdt
 		}
 
 		return db.add(entity, 'user_refresh_token');

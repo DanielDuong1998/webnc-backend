@@ -29,13 +29,14 @@ router.post('/', async(req, res)=>{
 	const userId = ret.id_tai_khoan;
 	const accessToken = generateAccessToken(userId);
 
-	let refresh_token = (await userModel.refreshTokenById(userId)).refresh_token;
-	
+	let row = (await userModel.refreshTokenById(userId));
+	let refresh_token = '';
 	//neu refreshToken khong co san tu truoc, generate refresh token va add vao db
-	if(refresh_token === undefined){
+	if(row === undefined){
 		refresh_token = randToken.generate(config.auth.refreshTokenSize);
 		await userModel.updateRefreshToken(userId, refresh_token);
 	}
+	else refresh_token = row.refresh_token;
 
 	res.json({
 		status: 1,

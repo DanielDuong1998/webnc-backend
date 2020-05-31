@@ -78,9 +78,34 @@ router.put('/password', async(req, res)=>{
 	});
 });
 
-router.post('/auth', async(req, res)=>{
+router.put('/forget-password', async (req, res)=>{
+	// body = ({
+	// 	"stk_thanh_toan": "123456789",
+	// 	"ma_pin_moi": "654321"
+	// })
+
+	let stk_thanh_toan = req.body.stk_thanh_toan;
+	let ma_pin = req.body.ma_pin_moi;
+	let entity = ({
+		stk_thanh_toan
+	});
+
+	const verify = await userModel.verifyEntityInfo(entity);
+	if(verify === true){
+		return res.json({
+			status: -1,
+			msg: 'stk_thanh_toan is incorrect!'
+		});
+	}
+
+	console.log('stk: ', stk_thanh_toan, ' ma_pin_moi: ', ma_pin);
+	const hash = bcrypt.hashSync(ma_pin, 8);
+	ma_pin = hash;
+	await userModel.changePw(ma_pin, stk_thanh_toan);
+
 	res.json({
-		msg: 'authentication account'
+		status: 1,
+		msg: 'The password change success!'
 	})
 });
 
