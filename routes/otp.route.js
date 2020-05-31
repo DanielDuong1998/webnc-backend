@@ -22,14 +22,6 @@ router.post('/', async(req, res)=>{
 		stk_thanh_toan
 	});
 
-	//xac thuc tai khoan co dung hay khong
-	// let verify = await userModel.verifyEntityInfo(entity);
-	// if(verify === true){
-	// 	return res.json({
-	// 		status: -1,
-	// 		msg: 'stk_thanh_toan is incorrect!'
-	// 	});
-	// }
 
 	let idtkEmail = await userModel.idtkEmailNameByStkTT(stk_thanh_toan);
 	if(idtkEmail.length === 0){
