@@ -42,6 +42,7 @@ app.get('/', (req, res)=>{
 
 app.use('/api/user', require('./routes/user.route'));
 app.use('/api/auth', require('./routes/auth.route'));
+app.use('/api/otp', require('./routes/otp.route'));
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
