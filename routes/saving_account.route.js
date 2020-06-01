@@ -9,7 +9,7 @@ router.post('/list', async(req, res)=>{
 	// body = {
 	// 	"stk_thanh_toan": "123456789"
 	// }
-
+	
 	const stk_thanh_toan = req.body.stk_thanh_toan;
 
 	const id_tai_khoan = await userModel.idByStkTT(stk_thanh_toan);

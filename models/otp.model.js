@@ -13,5 +13,10 @@ module.exports = {
 			return false;
 		}
 		return true;
+	},
+	otpByStkTT: async(stkTT)=>{
+		const sql = `select ma_otp, thoi_gian_otp from otp where stk_thanh_toan = '${stkTT}'`;
+		const row = await db.load(sql);
+		return row;
 	}
 }

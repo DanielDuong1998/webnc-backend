@@ -19,5 +19,8 @@
 		"secretSign": "secretSign",
 		"delayTime": 300000,
 		"minimumMoney": 50000
+	},
+	"otp": {
+		"duration": 300000
 	}
 }

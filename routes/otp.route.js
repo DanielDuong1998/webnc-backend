@@ -9,6 +9,8 @@ const userModel = require('../models/user.model');
 
 const router = express.Router();
 
+const config = require('../config/default.json');
+
 const transporter = nodemailer.createTransport('smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com');
 
 
@@ -61,6 +63,63 @@ router.post('/', async(req, res)=>{
 		status: 1,
 		msg: 'Send otp success'
 	});
+});
+
+router.post('/verify', async(req, res)=>{
+	// body = {
+	// 	"stk_thanh_toan": "123456789",
+	// 	"ma_otp": "452125"
+	// }
+	const stk_thanh_toan = req.body.stk_thanh_toan;
+	const ma_otp = req.body.ma_otp;
+	let entity = ({
+		stk_thanh_toan
+	});
+
+
+	let idtkEmail = await userModel.idtkEmailNameByStkTT(stk_thanh_toan);
+	if(idtkEmail.length === 0){
+		return res.json({
+			status: -1,
+			msg: 'stk_thanh_toan is incorrect'
+		});
+	}
+
+	const row = await otpModel.otpByStkTT(stk_thanh_toan);
+	if(row.length === 0){
+		return res.json({
+			status: -2,
+			msg: 'stk_thanh_toan do not otp code'
+		});
+	}
+
+	//xac thuc thoi gian otp
+	const timeStart = moment(row[0].thoi_gian_otp);
+	const timeOtp = moment();
+	const timeDelay = moment(timeOtp).diff(moment(timeStart));
+	const duration = config.otp.duration;
+	if(timeDelay > duration){
+		return res.json({
+			status: -3,
+			msg: 'The time was expired!'
+		});
+	}	
+
+	const otpSrc = row[0].ma_otp;
+	const otpRecive = String(ma_otp);
+	if(otpSrc !== otpRecive){
+		return res.json({
+			status: -4,
+			msg: 'Otp code not match'
+		});
+	}
+
+	res.json({
+		status: 1,
+		msg: 'Success verify otp'
+	});
+
+	
 });
 
 const sendOtpEmail = (email, ma_otp, ten)=>{
