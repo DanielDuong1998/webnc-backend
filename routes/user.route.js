@@ -108,6 +108,29 @@ router.put('/forget-password', async (req, res)=>{
 	})
 });
 
+router.post('/info', async(req, res)=>{
+	// body = {
+	// 	"stk_thanh_toan": "123456789"
+	// }
+	
+	const stk_thanh_toan = req.body.stk_thanh_toan;
+	const row = await userModel.singleByStkTT(stk_thanh_toan);
+	if(row.length === 0){
+		return res.json({
+			status: -1,
+			msg: 'stk_thanh_toan is inccorect'
+		});
+	}
+
+	const data = row[0];
+	delete data.ma_pin;
+
+	res.json({
+		status: 1,
+		msg: 'success get info',
+		data: data
+	});
+});
 
 const generateStkTT = async _=> {
 	let stk = '';
