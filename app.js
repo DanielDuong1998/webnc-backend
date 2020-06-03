@@ -3,7 +3,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const createError = require('http-errors');
 const moment = require('moment');
-const nodemailer = require('nodemailer');
 const bodyparser = require('body-parser');
 require('express-async-errors');
 
@@ -17,23 +16,6 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.json());
 
-const transporter = nodemailer.createTransport('smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com');
-
-const mailOption = {
-	from: 'Ngân Hàng Smartbank',
-	to: 'dvkhangnt@gmail.com',
-	subject: 'Test Nodemailer',
-	text: 'You receive massage from smartbankhk.com. Your otp : 356425',
-	html: '<b> Hello, this is auto mail. Your otp: 356425 </b>'
-};
-
-
-const nodemailerTest = _=>{
-	transporter.sendMail(mailOption, function(error, info){
-		if(error) return console.log(error);
-		console.log('Message send: ', info.response);
-	});
-}
 
 app.get('/', (req, res)=>{
 
@@ -47,6 +29,7 @@ app.use('/api/user', require('./routes/user.route'));
 app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/otp', require('./routes/otp.route'));
 app.use('/api/saving-account', require('./routes/saving_account.route'));
+app.use('/api/recipient-list', require('./routes/recipient_list.route'));
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
