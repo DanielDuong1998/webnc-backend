@@ -12,6 +12,7 @@ router.post('/', async(req, res)=>{
 	});
 });
 
+
 //người dùng gửi tiền cho người dùng khác
 router.post('/send-money-user', async(req, res)=>{
 	// body = {
@@ -77,6 +78,20 @@ router.post('/send-money-employee', async(req, res)=>{
 	// 	"so_tien_gui": "30000"
 	// }
 
+	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
+	const so_tien_gui = +req.body.so_tien_gui;
+
+	const verify = await verifyInfoStk(stk_nguoi_nhan);
+	console.log('verify: ', verify);
+	if(verify === false){
+		return res.json({
+			status: -1,
+			msg: 'stk_nguoi_nhan is not incorrect'
+		});
+	}
+	
+	console.log('so tien nguoi gui: ', typeof so_tien_gui, so_tien_gui);
+	await recharge(stk_nguoi_nhan, so_tien_gui);
 
 	res.json({
 		status: 1, 
@@ -96,10 +111,7 @@ const verifyInfoStk = async(stkTT)=>{
 	const entity = ({
 		stk_thanh_toan: stkTT
 	});
-	const row = await userModel.verifyEntityInfo(entity);
-	if(row.length === 0){
-		return false;
-	}
-	return true;
+	let row = await userModel.verifyEntityInfo(entity);
+	return !row;
 }
 module.exports = router;
