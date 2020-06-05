@@ -17,6 +17,11 @@ module.exports = {
 	idtkEmailNameByStkTT: async (stkTT)=>{
 		return db.load(`select id_tai_khoan, email, ten from user where stk_thanh_toan = '${stkTT}'`);
 	},
+	moneyByStkTT: async stkTT => {
+		const sql = `select so_du_hien_tai from user where stk_thanh_toan = '${stkTT}'`;
+		const row = await db.load(sql);
+		return Number(row[0].so_du_hien_tai);
+	},
 	updateRefreshToken: async (userId, token) =>{
 		await db.del({Id: userId}, 'user_refresh_token');
 		let rdt = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -51,6 +56,11 @@ module.exports = {
 	},
 	addMoney: async(stkTT, soTien)=>{
 		const sql = `update user set so_du_hien_tai = so_du_hien_tai + ${soTien} where stk_thanh_toan = ${stkTT}`;
+		const row = await db.load(sql);
+		return row;
+	},
+	subMoney: async(stkTT, soTien)=>{
+		const sql = `update user set so_du_hien_tai = so_du_hien_tai - ${soTien} where stk_thanh_toan = ${stkTT}`;
 		const row = await db.load(sql);
 		return row;
 	},
