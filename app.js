@@ -31,6 +31,7 @@ app.use('/api/otp', require('./routes/otp.route'));
 app.use('/api/saving-account', require('./routes/saving_account.route'));
 app.use('/api/recipient-list', require('./routes/recipient_list.route'));
 app.use('/api/money', require('./routes/money.route'));
+app.use('/api/bank', require('./routes/bank.route'));
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
