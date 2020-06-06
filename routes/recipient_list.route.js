@@ -25,22 +25,35 @@ router.post('/', async (req, res)=>{
 	// kiem tra stk_thanh_toan co ton tai hay khong
 	const stkTT = req.body.stk_nguoi_gui;
 	const stkNN = req.body.stk_nguoi_nhan;
-	const ten = req.body.ten_goi_nho;
-	let verify = await verifyStkTT(stkTT);
-	console.log('verify tt: ', verify);
-	if(verify === false){
+	let ten = req.body.ten_goi_nho;
+	// let verify = await verifyStkTT(stkTT);
+	// console.log('verify tt: ', verify);
+	// if(verify === false){
+	// 	return res.json({
+	// 		status: -1,
+	// 		msg: 'stk_nguoi_gui is incorrect'
+	// 	});
+	// }
+	// verify = await verifyStkTT(stkNN);
+	// console.log('verify ttnn: ', verify);
+	// if(verify === false){
+		// return res.json({
+		// 	status: -1,
+		// 	msg: 'stk_nguoi_nhan is incorrect'
+		// });
+	// }
+
+	const row = await nameByStkTT(stkNN);
+	if(row.length === 0){
 		return res.json({
 			status: -1,
-			msg: 'stk_nguoi_gui is incorrect'
-		});
-	}
-	verify = await verifyStkTT(stkNN);
-	console.log('verify ttnn: ', verify);
-	if(verify === false){
-		return res.json({
-			status: -2,
 			msg: 'stk_nguoi_nhan is incorrect'
 		});
+	}
+
+	if(ten === undefined || ten.length === 0){
+		ten = row[0].ten;
+		console.log('ten: ', ten);
 	}
 
 	//kiem tra stk_nguoi_nhan da ton tai trong danh sach chua
@@ -52,7 +65,7 @@ router.post('/', async (req, res)=>{
 	console.log('verify nn: ', verify);
 	if(verify === 1){
 		return res.json({
-			status: -3,
+			status: -2,
 			msg: 'stk_nguoi_nhan was exist'
 		});
 	}
@@ -150,8 +163,8 @@ router.put('/name', async (req, res)=>{
 
 router.put('/delete', async(req, res)=>{
 	// body = {
-	// 	"stk_nguoi_gui": "123456789",
-	// 	"stk_nguoi_nhan": "450516872"
+		// "stk_nguoi_gui": "123456789",
+		// "stk_nguoi_nhan": "450516872"
 	// }
 	const stkTT = req.body.stk_nguoi_gui;
 	const stkNN = req.body.stk_nguoi_nhan;
@@ -178,6 +191,11 @@ router.put('/delete', async(req, res)=>{
 		msg: 'success deleted'
 	});
 });
+
+const nameByStkTT = async stkTT=>{
+	const name = await userModel.nameByStkTT(stkTT);
+	return name;
+}
 
 const verifyStkTT = async stkTT =>{
 	const entity = ({

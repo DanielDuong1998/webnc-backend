@@ -17,6 +17,7 @@ module.exports = {
 	idtkEmailNameByStkTT: async (stkTT)=>{
 		return db.load(`select id_tai_khoan, email, ten from user where stk_thanh_toan = '${stkTT}'`);
 	},
+	nameByStkTT: stkTT => db.load(`select ten from user where stk_thanh_toan = '${stkTT}'`),
 	moneyByStkTT: async stkTT => {
 		const sql = `select so_du_hien_tai from user where stk_thanh_toan = '${stkTT}'`;
 		const row = await db.load(sql);
