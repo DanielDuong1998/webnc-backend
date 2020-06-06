@@ -10,8 +10,8 @@ module.exports = {
 		const sql = `update recipient_list set status = ${0} where stk_nguoi_gui = '${stkTT}' and stk_nguoi_nhan = '${stkNN}'`;
 		return db.load(sql);
 	},
-	listByStkTT: async stkTT =>{
-		const sql = `select stk_nguoi_nhan, ten_goi_nho, id_ngan_hang, status from recipient_list where stk_nguoi_gui = '${stkTT}'`;
+	listByStkTT: async param =>{
+		const sql = `select stk_nguoi_nhan, ten_goi_nho, id_ngan_hang, status from recipient_list where stk_nguoi_gui = '${param.stk_nguoi_gui}' and stk_nguoi_nhan like '%${param.stk_nguoi_nhan}%' and ten_goi_nho like '%${param.ten_goi_nho}%'`;
 		const row = await db.load(sql);
 		return row;
 	},

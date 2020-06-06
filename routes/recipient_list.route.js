@@ -80,6 +80,7 @@ router.post('/list', async (req, res)=>{
 	// body = {
 	// 	"stk_nguoi_gui": "123456789"
 	// }
+	const param = req.body;
 	const stkTT = req.body.stk_nguoi_gui;
 	let verify = await verifyStkTT(stkTT);
 	if(stkTT === false){
@@ -89,7 +90,13 @@ router.post('/list', async (req, res)=>{
 		});
 	}
 
-	const row = await recipientModel.listByStkTT(stkTT);
+	if(!param.stk_nguoi_nhan ){
+		param.stk_nguoi_nhan = '';
+	}
+	if (!param.ten_goi_nho){
+		param.ten_goi_nho = '';
+	}
+	const row = await recipientModel.listByStkTT(param);
 	const filter = row.filter(e=>{
 		return e.status === 1;
 	});
