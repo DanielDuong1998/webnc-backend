@@ -11,12 +11,13 @@ const router = express.Router();
 
 const config = require('../config/default.json');
 
-const transporter = nodemailer.createTransport('smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com');
+const transporter = nodemailer.createTransport(config.otp.emailAccount);
 
 
 router.post('/', async(req, res)=>{
 	// body = {
-	// 	"stk_thanh_toan" : "123456"
+	// 	"stk_thanh_toan" : "123456",
+	//  "type": 0			//0: quen mk, 1: chuyen tien, 2: thanh toan nhac no
 	// }
 
 	let stk_thanh_toan = req.body.stk_thanh_toan;

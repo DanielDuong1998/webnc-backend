@@ -18,8 +18,6 @@ app.use(express.json());
 
 //cmt
 app.get('/', (req, res)=>{
-
-	nodemailerTest();
 	res.json({
 		msg: 'This is api of Smart Banking - nodejs'
 	});

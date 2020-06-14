@@ -7,6 +7,7 @@ const userModel = require('../models/user.model');
 const authModel = require('../models/auth.model');
 
 const router = express.Router();
+const config = require('../config/default.json');
 
 router.get('/', async (req, res)=> {
 	const ret = await userModel.all();
@@ -21,8 +22,10 @@ router.post('/', async(req, res)=>{
     	return res.json(verify);
     }
 
-    let stk_thanh_toan = await generateStkTT();
+    let stk_thanh_toan = await generateStkTT(0);
     req.body.stk_thanh_toan = stk_thanh_toan;
+    req.body.ma_pin = "123456";
+    req.body.so_du_hien_tai = 50000;
 
     let ngay_tao = moment().format('YYYY-MM-DD');
 	ngay_tao = momentTz(ngay_tao).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
@@ -35,6 +38,8 @@ router.post('/', async(req, res)=>{
     let ret = ({
     	status: 1,
     	id_tai_khoan: result.insertId,
+    	ma_pin: "123456",
+    	so_du_hien_tai: 50000, //cấu hình này lun
     	...req.body
     });
 
@@ -132,12 +137,32 @@ router.post('/info', async(req, res)=>{
 	});
 });
 
-const generateStkTT = async _=> {
+const generateStkTT = async type=> { //cấu hình lại
+	const startNum = config.user.startStkGen[type];
+	const endNum = config.user.endStkGen[type];
+	// switch(type){
+	// 	case 0: {
+	// 		startNum = 1000000000000;
+	// 		endNum = 9999999999999; 
+	// 		break;
+	// 	}
+	// 	case 1: {
+	// 		startNum = 100000000000;
+	// 		endNum = 999999999999; 
+	// 		break;
+	// 	}
+	// 	case 2: {
+	// 		startNum = 10000000000;
+	// 		endNum = 99999999999; 
+	// 		break;
+	// 	}
+	// }
+
 	let stk = '';
 	let flag  = false;
 	let entity = '';
 	while(flag === false){
-		stk = Math.floor(Math.random()*(999999999-100000000) + 100000000).toString(10);
+		stk = Math.floor(Math.random()*(endNum-startNum) + startNum).toString(10);
 		entity = ({
 			stk_thanh_toan: stk
 		});

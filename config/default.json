@@ -21,7 +21,13 @@
 		"minimumMoney": 50000
 	},
 	"otp": {
-		"duration": 300000
+		"duration": 300000,
+		"emailAccount": "smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com",
+		"textEmail": ["đặt lại mật khẩu SmartBanking", "chuyển tiền", "thanh toán nhắc nợ"]
 	},
-	"fee": 3000
+	"fee": 3000,
+	"user": {
+		"startStkGen": [1000000000000, 100000000000, 10000000000], 
+		"endStkGen": [9999999999999, 999999999999, 99999999999]
+	}
 }

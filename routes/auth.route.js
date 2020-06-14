@@ -17,6 +17,17 @@ router.post('/', async(req, res)=>{
 	// 	"ma_pin": "123456"
 	// }
 	
+	let role;
+	if(req.body.stk_thanh_toan.length === 13){
+		role = 0;
+	}
+	else if(req.body.stk_thanh_toan === 12){
+		role = 1;
+	}
+	else if(req.body.stk_thanh_toan === 11){
+		role = 2;
+	}
+
 	const ret = await authModel.login(req.body);
 
 	if(ret === null){
@@ -44,7 +55,8 @@ router.post('/', async(req, res)=>{
 		refreshToken : refresh_token,
 		ten: ret.ten,
 		stkThanhToan: ret.stk_thanh_toan,
-		soDuHienTai: ret.so_du_hien_tai
+		soDuHienTai: ret.so_du_hien_tai,
+		role
 	});
 });
 
