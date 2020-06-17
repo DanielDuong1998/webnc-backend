@@ -7,5 +7,6 @@ module.exports = {
 		const rows = await db.load(sql);
 		return rows;
 	},
-	ud: (entity, id)=> db.ud('debt_reminder_list', entity, id)
+	ud: (entity, id)=> db.ud('debt_reminder_list', entity, id),
+	singleRowById: id=> db.load(`select * from debt_reminder_list where id = ${id}`),
 }

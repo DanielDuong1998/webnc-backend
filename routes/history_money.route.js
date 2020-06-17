@@ -2,6 +2,7 @@ const express = require('express');
 const moment = require('moment');
 
 const history_send_receiveModel = require('../models/history_send_receive.model');
+const history_pay_debtModel = require('../models/history_pay_debt.model');
 
 const router = express.Router();
 
@@ -55,5 +56,12 @@ router.post('/receive', async(req, res)=>{
 	});
 });
 
+router.post('/pay-debt', (req, res)=>{
+
+});
+
+router.post('/receive-debt', (req, res)=>{
+
+});
 
 module.exports = router;
