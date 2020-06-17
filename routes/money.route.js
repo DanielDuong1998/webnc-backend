@@ -1,6 +1,9 @@
 const express = require('express');
+const moment = require('moment');
+const momentTz = require('moment-timezone');
 
 const userModel = require('../models/user.model');
+const history_send_receiveModel = require('../models/history_send_receive.model');
 const config = require('../config/default.json');
 
 const router = express.Router();
@@ -62,8 +65,24 @@ router.post('/send-money-user', async(req, res)=>{
 	console.log('chuyen tien thanh cong');
 	await deduction(stk_nguoi_gui, khau_tru);
 	console.log('khau tru thanh cong')
+	let time_send = moment().format('YYYY-MM-DD HH:mm:ss');
+	time_send = momentTz(time_send).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 
+	const entity = ({
+		id_ngan_hang_gui: 0,
+		id_ngan_hang_nhan: 0,
+		phi: phi_money,
+		stk_nguon: stk_nguoi_gui,
+		stk_dich: stk_nguoi_nhan,
+		ten_nguoi_gui: '',
+		ten_nguoi_nhan: '',
+		noi_dung: noi_dung,
+		so_tien_gui: so_tien_gui,
+		so_tien_nhan: thuc_nhan,
+		thoi_gian_gui: time_send
+	});
 
+	await history_send_receiveModel.add(entity);
 
 	res.json({
 		status: 1,
