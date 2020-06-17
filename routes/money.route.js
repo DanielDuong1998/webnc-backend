@@ -21,20 +21,30 @@ router.post('/send-money-user', async(req, res)=>{
 	// body = {
 		// "stk_nguoi_gui": "123456789",
 		// "stk_nguoi_nhan": "450516872",
+		// "ten_gui_gui": ""
 		// "so_tien_gui": "300000",
 		// "noi_dung": "tra luong thang 6",
 		// "phi" : "0"
 	// }
 	const stk_nguoi_gui = req.body.stk_nguoi_gui;
 	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
+	const ten_nguoi_gui = req.body.ten_nguoi_gui;
 	const so_tien_gui = req.body.so_tien_gui;
 	const noi_dung = req.body.noi_dung;
 	const phi = req.body.phi;
 	let phi_money = 0;
 	let thuc_nhan = +so_tien_gui;
 	//xac thuc thong tin nguoi nhan	
-	const verify = await verifyInfoStk(stk_nguoi_nhan);
-	if(verify === false){
+	// const verify = await verifyInfoStk(stk_nguoi_nhan);
+	// if(verify === false){
+	// 	return res.json({
+	// 		status: -1,
+	// 		msg: 'stk_nguoi_nhan is incorrect'
+	// 	});
+	// }
+
+	const ten_nguoi_nhan = await nameByStk(stk_nguoi_nhan);
+	if(ten_nguoi_gui.length === 0){
 		return res.json({
 			status: -1,
 			msg: 'stk_nguoi_nhan is incorrect'
@@ -74,8 +84,8 @@ router.post('/send-money-user', async(req, res)=>{
 		phi: phi_money,
 		stk_nguon: stk_nguoi_gui,
 		stk_dich: stk_nguoi_nhan,
-		ten_nguoi_gui: '',
-		ten_nguoi_nhan: '',
+		ten_nguoi_gui: ten_nguoi_gui,
+		ten_nguoi_nhan: ten_nguoi_nhan[0].ten,
 		noi_dung: noi_dung,
 		so_tien_gui: so_tien_gui,
 		so_tien_nhan: thuc_nhan,
@@ -133,4 +143,11 @@ const verifyInfoStk = async(stkTT)=>{
 	let row = await userModel.verifyEntityInfo(entity);
 	return !row;
 }
+
+const nameByStk = async(stkTT)=>{
+	let name = await userModel.nameByStkTT(stkTT);
+	return name;
+}
+
+
 module.exports = router;

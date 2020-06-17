@@ -31,6 +31,7 @@ app.use('/api/recipient-list', require('./routes/recipient_list.route'));
 app.use('/api/money', require('./routes/money.route'));
 app.use('/api/bank', require('./routes/bank.route'));
 app.use('/api/history-money', require('./routes/history_money.route'));
+app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 
