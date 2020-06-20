@@ -10,7 +10,7 @@
 		"database": "sql12348556"
 	},
 	"auth": {
-		"secretPassword": "secretKey",
+		"secretPassword": ["userSecretKey", "employeeSecretKey", "adminSecretKey"],
 		"refreshTokenSize": 80,
 		"expiresIn": "10m"
 	},

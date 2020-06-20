@@ -137,26 +137,9 @@ router.post('/info', async(req, res)=>{
 	});
 });
 
-const generateStkTT = async type=> { //cấu hình lại
+const generateStkTT = async type=> { 
 	const startNum = config.user.startStkGen[type];
 	const endNum = config.user.endStkGen[type];
-	// switch(type){
-	// 	case 0: {
-	// 		startNum = 1000000000000;
-	// 		endNum = 9999999999999; 
-	// 		break;
-	// 	}
-	// 	case 1: {
-	// 		startNum = 100000000000;
-	// 		endNum = 999999999999; 
-	// 		break;
-	// 	}
-	// 	case 2: {
-	// 		startNum = 10000000000;
-	// 		endNum = 99999999999; 
-	// 		break;
-	// 	}
-	// }
 
 	let stk = '';
 	let flag  = false;

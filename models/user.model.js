@@ -25,12 +25,11 @@ module.exports = {
 	},
 	updateRefreshToken: async (userId, token) =>{
 		await db.del({Id: userId}, 'user_refresh_token');
-		let rdt = moment().format('YYYY-MM-DD HH:mm:ss');
-		rdt = momentTz(rdt).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+		const rdt = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 		const entity = {
 			Id: userId,
 			refresh_token: token,
-			rdt: rdt
+			rdt
 		}
 
 		return db.add(entity, 'user_refresh_token');
