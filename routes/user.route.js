@@ -137,6 +137,23 @@ router.post('/info', async(req, res)=>{
 	});
 });
 
+
+router.post('/name', async (req, res)=>{
+	// body = {
+	// 	"stk_thanh_toan": "1234567891234"
+	// }
+	const rows = await userModel.nameByStkTT(req.body.stk_thanh_toan);
+	let name = ''
+	if(rows.length !== 0){
+		name = rows[0].ten;
+	}
+
+	return res.json({
+		status: 1,
+		name: name
+	});
+});
+
 const generateStkTT = async type=> { 
 	const startNum = config.user.startStkGen[type];
 	const endNum = config.user.endStkGen[type];

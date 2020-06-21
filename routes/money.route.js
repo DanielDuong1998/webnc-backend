@@ -44,7 +44,7 @@ router.post('/send-money-user', async(req, res)=>{
 	// }
 
 	const ten_nguoi_nhan = await nameByStk(stk_nguoi_nhan);
-	if(ten_nguoi_gui.length === 0){
+	if(ten_nguoi_nhan.length === 0){
 		return res.json({
 			status: -1,
 			msg: 'stk_nguoi_nhan is incorrect'

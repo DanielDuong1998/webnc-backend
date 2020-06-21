@@ -30,7 +30,7 @@ router.post('/admin', async (req, res)=>{
 
 	entity.tai_khoan = tai_khoan;
 	entity.mat_khau = '123456';
-	let ngay_tao = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
+	const ngay_tao = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
 	entity.ngay_tao = ngay_tao;
 	entity.role = 1;
 
@@ -39,6 +39,33 @@ router.post('/admin', async (req, res)=>{
 	res.json({
 		status: 1,
 		msg: 'create admin account success'
+	});
+});
+
+router.post('/employee', async (req, res)=>{
+	// body = {
+		// "ten": "Dương Khang",
+		// "ngay_sinh": "1998-01-23",
+		// "dia_chi": "Ninh Thuận",
+		// "cmnd": "264478911"
+	// }
+
+	let entity = req.body;
+
+	const tai_khoan = await generateAccount(1);
+	console.log('tai_khoan: ', tai_khoan);
+
+	entity.tai_khoan = tai_khoan;
+	entity.mat_khau = '123456';
+	const ngay_tao = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
+	entity.ngay_tao = ngay_tao;
+	entity.role = 0;
+
+	await accountModel.add(entity);
+
+	res.json({
+		status: 1,
+		msg: 'create employee account success'
 	});
 });
 

@@ -26,7 +26,12 @@ router.post('/', async(req, res)=>{
 	else if(req.body.stk_thanh_toan.length === 12){
 		role = 1;
 		req.body.role = 0;
-		ret = await authModel.loginAccount(req.body);
+		const entity1 = ({
+			tai_khoan: req.body.stk_thanh_toan,
+			mat_khau: req.body.ma_pin,
+			role: 0
+		});
+		ret = await authModel.loginAccount(entity1);
 	}
 	else if(req.body.stk_thanh_toan.length === 11){
 		role = 2;
@@ -71,7 +76,6 @@ router.post('/', async(req, res)=>{
 			});
 		}
 		case 1: {
-			break;
 			const userId = ret.id;
 			const accessToken = generateAccessToken(userId, 1);
 
@@ -166,7 +170,6 @@ router.post('/refresh', async(req, res)=>{
 // generate AccessToken
 const generateAccessToken = (userId, role) =>{
 	const payload = { userId };
-
 	const accessToken = jwt.sign(payload, config.auth.secretPassword[role], {
 		expiresIn: config.auth.expiresIn //10mins 
 	});
