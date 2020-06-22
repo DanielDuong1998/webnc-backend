@@ -11,7 +11,7 @@ module.exports = {
 		return db.load(sql);
 	},
 	listByStkTT: async param =>{
-		const sql = `select stk_nguoi_nhan, ten_goi_nho, id_ngan_hang, status from recipient_list where stk_nguoi_gui = '${param.stk_nguoi_gui}' and stk_nguoi_nhan like '%${param.stk_nguoi_nhan}%' and ten_goi_nho like '%${param.ten_goi_nho}%'`;
+		const sql = `select recipient_list.stk_nguoi_nhan, recipient_list.ten_goi_nho, recipient_list.id_ngan_hang, recipient_list.status, bank.ten from recipient_list, bank where stk_nguoi_gui = '${param.stk_nguoi_gui}' and recipient_list.id_ngan_hang = bank.id`;
 		const row = await db.load(sql);
 		return row;
 	},

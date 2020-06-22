@@ -38,7 +38,9 @@ router.post('/admin', async (req, res)=>{
 
 	res.json({
 		status: 1,
-		msg: 'create admin account success'
+		msg: 'create admin account success',
+		tai_khoan,
+		mat_khau: '123456'
 	});
 });
 
@@ -65,7 +67,9 @@ router.post('/employee', async (req, res)=>{
 
 	res.json({
 		status: 1,
-		msg: 'create employee account success'
+		msg: 'create employee account success',
+		tai_khoan,
+		mat_khau: '123456'
 	});
 });
 
