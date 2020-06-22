@@ -9,4 +9,14 @@ module.exports = {
 	},
 	ud: (entity, id)=> db.ud('debt_reminder_list', entity, id),
 	singleRowById: id=> db.load(`select * from debt_reminder_list where id = ${id}`),
+	hisPayReceive: entity => {
+		let field = '';
+		if(entity.type === 0){
+			field = 'stk_nguon';
+		}
+		else field = 'stk_dich';
+
+		const sql = `select * from history_pay_debt where ${field} = '${entity.stkTT}`;
+		return db.load(sql);
+	}
 }

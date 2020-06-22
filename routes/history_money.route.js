@@ -56,12 +56,52 @@ router.post('/receive', async(req, res)=>{
 	});
 });
 
-router.post('/pay-debt', (req, res)=>{
+router.post('/pay-debt', async (req, res)=>{
+	// body = {
+	// 	"stk_nguoi_thanh_toan": "1234567891234"
+	// }
 
+	const stkTT = req.body.stk_nguoi_thanh_toan;
+
+	const entity = ({
+		type: 0,
+		stkTT
+	});
+
+	let data = await history_pay_debtModel.hisPayReceive(entity);
+	data.forEach(e=>{
+		e.thoi_gian = moment(e.thoi_gian).format('YYYY-MM-DD HH:mm:ss');
+	});
+
+	res.json({
+		status: 1,
+		data
+	})
 });
 
-router.post('/receive-debt', (req, res)=>{
+router.post('/receive-debt', async (req, res)=>{
+	// body = {
+	// 	"stk_nguoi_nhan": "1234567891234"
+	// }
 
+	const stkTT = req.body.stk_nguoi_nhan;
+
+	const entity = ({
+		type: 1,
+		stkTT
+	});
+
+	let data = await history_pay_debtModel.hisPayReceive(entity);
+	data.forEach(e=>{
+		e.thoi_gian = moment(e.thoi_gian).format('YYYY-MM-DD HH:mm:ss');
+	});
+
+	res.json({
+		status: 1,
+		data
+	})
 });
+
+
 
 module.exports = router;

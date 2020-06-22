@@ -6,12 +6,10 @@ module.exports = {
 		return db.add(entity, 'history_send_receive');
 	},
 	hisSendReceive: async entity=>{
-		let field = '';
+		let field = 'stk_dich';
 		if(entity.type === 0){
 			field = 'stk_nguon';
 		}
-		else field = 'stk_dich';
-
 		const sql = `select * from history_send_receive where ${field} = '${entity.stkTT}'`;
 		const rows = await db.load(sql);
 		return rows;

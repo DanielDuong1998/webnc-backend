@@ -4,6 +4,7 @@ const momentTz = require('moment-timezone');
 
 const userModel = require('../models/user.model');
 const history_send_receiveModel = require('../models/history_send_receive.model');
+const history_add_money_by_employeeModel = require('../models/history_add_money_by_employee.model');
 const config = require('../config/default.json');
 
 const router = express.Router();
@@ -16,7 +17,7 @@ router.post('/', async(req, res)=>{
 });
 
 
-//người dùng gửi tiền cho người dùng khác
+//người dùng gửi tiền cho người dùng khác, token cua nguoi dung
 router.post('/send-money-user', async(req, res)=>{
 	// body = {
 		// "stk_nguoi_gui": "123456789",
@@ -101,14 +102,16 @@ router.post('/send-money-user', async(req, res)=>{
 });
 
 //nhân viên nạp tiền cho người dùng,
-router.post('/send-money-employee', async(req, res)=>{
+router.post('/send-money-employee', async(req, res)=>{ // token cua nhan vien
 	// body = {
-	// 	"stk_nguoi_nhan": "123456789",
-	// 	"so_tien_gui": "30000"
+		// "stk_nguoi_nhan": "123456789",
+		// "so_tien_gui": "30000",
+		// "tai_khoan": "121578703691"
 	// }
 
 	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
 	const so_tien_gui = +req.body.so_tien_gui;
+	const tai_khoan_nhan_vien = req.body.tai_khoan;
 
 	const verify = await verifyInfoStk(stk_nguoi_nhan);
 	console.log('verify: ', verify);
@@ -121,6 +124,16 @@ router.post('/send-money-employee', async(req, res)=>{
 	
 	console.log('so tien nguoi gui: ', typeof so_tien_gui, so_tien_gui);
 	await recharge(stk_nguoi_nhan, so_tien_gui);
+
+	const time = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	const entity = ({
+		tai_khoan_nhan_vien,
+		stk_nguon: stk_nguoi_nhan,
+		so_tien: so_tien_gui,
+		thoi_gian: time
+	});
+	await history_add_money_by_employeeModel.add(entity);
+
 
 	res.json({
 		status: 1, 

@@ -17,10 +17,10 @@ router.get('/admin', async (req, res)=>{
 
 router.post('/admin', async (req, res)=>{
 	// body = {
-		// "ten": "Dương Khang",
-		// "ngay_sinh": "1998-01-23",
-		// "dia_chi": "Ninh Thuận",
-		// "cmnd": "264478911"
+	// 	"ten": "Dương Khang",
+	// 	"ngay_sinh": "1998-01-23",
+	// 	"dia_chi": "Ninh Thuận",
+	// 	"cmnd": "264478911"
 	// }
 
 	let entity = req.body;
