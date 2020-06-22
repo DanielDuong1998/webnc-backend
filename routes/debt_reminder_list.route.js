@@ -185,6 +185,42 @@ router.post('/pay', async(req, res)=>{
 	})
 });
 
+router.post('/list-send', async(req, res)=>{
+	// body = {
+	// 	"stk_nguoi_gui": "3423595061234"
+	// }
+
+	const stk_nguoi_gui = req.body.stk_nguoi_gui;
+	const entity = ({
+		type: 0,
+		stkTT: stk_nguoi_gui
+	})
+	const list = await debt_reminder_listModel.listSendReceive(entity);
+
+	res.json({
+		status: 1,
+		list
+	})
+});
+
+router.post('/list-receive', async(req, res)=>{
+	// body = {
+	// 	"stk_nguoi_nhan": "3423595061234"
+	// }
+
+	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
+	const entity = ({
+		type: 1,
+		stkTT: stk_nguoi_nhan
+	})
+	const list = await debt_reminder_listModel.listSendReceive(entity);
+
+	res.json({
+		status: 1,
+		list
+	})
+});
+
 const verifyStkTT = async (stkTT)=>{
 	const rows = await userModel.idByStkTT(stkTT);
 	return rows;

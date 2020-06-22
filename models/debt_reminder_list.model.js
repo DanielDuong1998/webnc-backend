@@ -18,5 +18,14 @@ module.exports = {
 
 		const sql = `select * from history_pay_debt where ${field} = '${entity.stkTT}`;
 		return db.load(sql);
+	},
+	listSendReceive: entity=>{
+		let field = 'stk_nguoi_gui';
+		if(entity.type === 1){
+			field = 'stk_nguoi_nhan';
+		}
+
+		const sql = `select * from debt_reminder_list where trang_thai <> 1 and ${field} = '${entity.stkTT}'`;
+		return db.load(sql);
 	}
 }
