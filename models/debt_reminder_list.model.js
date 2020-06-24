@@ -25,7 +25,7 @@ module.exports = {
 			field = 'stk_nguoi_nhan';
 		}
 
-		const sql = `select * from debt_reminder_list where trang_thai <> 1 and ${field} = '${entity.stkTT}'`;
+		const sql = `select debt_reminder_list.*, user.ten from debt_reminder_list, user where trang_thai <> 1 and ${field} = '${entity.stkTT}' and debt_reminder_list.${field} = user.stk_thanh_toan`;
 		return db.load(sql);
 	}
 }
