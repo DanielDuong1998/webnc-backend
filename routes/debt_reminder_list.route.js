@@ -6,6 +6,7 @@ const momentTz = require('moment-timezone');
 const debt_reminder_listModel = require('../models/debt_reminder_list.model');
 const history_pay_debtModel = require('../models/history_pay_debt.model');
 const userModel = require('../models/user.model');
+const notificationModel = require('../models/notification.model');
 
 const config = require('../config/default.json');
 
@@ -17,6 +18,7 @@ router.get('/', (req, res)=>{
 	});
 });
 
+//tao nhac no
 router.post('/', async (req, res)=>{
 	// body = {
 		// "stk_nguoi_gui": "1234567891234",
@@ -79,6 +81,18 @@ router.post('/', async (req, res)=>{
 		io.to(`${e.id}`).emit('debt', debtNotification);
 	});
 
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_nguoi_nhan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: 2
+		});
+
+		await notificationModel.add(entityNoti);
+	}
+
 	res.json({
 		status: 1,
 		msg: 'tao nhac no thanh cong'
@@ -94,15 +108,15 @@ router.post('/delete', async(req, res)=>{
 
 	//kiem tra id no da duoc xoa chua hay id no co ton tai hay khong?
 	const id = req.body.id;
-	const status = await debt_reminder_listModel.statusById(id);
-	if(status.length === 0){
+	const rows = await debt_reminder_listModel.singleRowById(id);
+	if(rows.length === 0){
 		return res.json({
 			status: -1,
 			msg: 'did not find id'
 		});
 	}
 
-	if(status[0].trang_thai === 1){
+	if(rows[0].trang_thai === 1){
 		return res.json({
 			status: -2,
 			msg: 'debt_reminder was deleted!'
@@ -121,6 +135,44 @@ router.post('/delete', async(req, res)=>{
 	});
 
 	await debt_reminder_listModel.ud(entity, id);
+
+	//socket io
+	const {stk_nguoi_gui, stk_nguoi_nhan} = rows[0];
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	let listId = [];
+
+	let stkTT = stk_nguoi_nhan;
+	let type = 3;
+	if(req.body.nguoi_xoa == 1){
+		stkTT = stk_nguoi_gui;
+		type = 4;
+	}
+
+	listSocket.forEach(e =>{
+		if(e.stk === stkTT){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body
+	});
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit(`deleteDebt${req.body.nguoi_xoa}`, debtNotification);
+	});
+
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_nguoi_nhan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: type
+		});
+
+		await notificationModel.add(entityNoti);
+	}
 
 	res.json({
 		status: 1,
