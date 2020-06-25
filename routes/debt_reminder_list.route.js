@@ -194,6 +194,7 @@ router.post('/pay', async(req, res)=>{
 	const ten_nguoi_gui = req.body.ten_nguoi_gui;
 	let noi_dung_xoa = req.body.noi_dung_xoa;
 	const rows = await debt_reminder_listModel.singleRowById(id);
+	const stk_nguoi_nhan = rows[0].stk_nguoi_gui; //stk_nguoi_gui la gui nhac no, la nguoi se nhan duoc thanh toan
 	
 	// kiem tra id neu trang thai = 0 moi thuc hien
 	if(rows[0].trang_thai === 1){
@@ -250,6 +251,37 @@ router.post('/pay', async(req, res)=>{
 	await history_pay_debtModel.add(entity2);
 
 	//ud trang thai
+
+	//socket io
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	console.log('list socket: ', listSocket);
+	let listId = [];
+
+	listSocket.forEach(e =>{
+		if(e.stk === stk_nguoi_nhan){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body
+	});
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit('payDebt', debtNotification);
+	});
+
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_nguoi_nhan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: 5
+		});
+
+		await notificationModel.add(entityNoti);
+	}
 
 	res.json({
 		status: 1,
