@@ -6,9 +6,21 @@ const moment = require('moment');
 const bodyparser = require('body-parser');
 require('express-async-errors');
 
+
+
 const mdwFunc = require('./middlewares/auth.mdw');
 
 const app = express();
+var listSocket = [];
+
+//socketio
+const server = require('http').Server(app);
+var io = require('socket.io')(server);
+require('./socketio.js')(io, listSocket);
+server.listen(45202);
+
+app.set('listSocket', listSocket);
+app.set('io', io);
 
 app.use(morgan('dev'));
 app.use(cors());
