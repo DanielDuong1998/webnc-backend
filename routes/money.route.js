@@ -131,7 +131,7 @@ router.post('/send-money-user', async(req, res)=>{
 //nhân viên nạp tiền cho người dùng,
 router.post('/send-money-employee', async(req, res)=>{ // token cua nhan vien
 	// body = {
-		// "stk_nguoi_nhan": "123456789",
+		// "stk_nguoi_nhan": "1234567891234",
 		// "so_tien_gui": "30000",
 		// "tai_khoan": "121578703691"
 	// }
@@ -160,6 +160,38 @@ router.post('/send-money-employee', async(req, res)=>{ // token cua nhan vien
 		thoi_gian: time
 	});
 	await history_add_money_by_employeeModel.add(entity);
+
+	//socket io
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	console.log('list socket: ', listSocket);
+	let listId = [];
+
+	listSocket.forEach(e =>{
+		if(e.stk === stk_nguoi_nhan){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body
+	});
+	console.log('length list: ', listId);
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit('receiveMoneyEmployee', debtNotification);
+	});
+
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_nguoi_nhan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: 1
+		});
+
+		await notificationModel.add(entityNoti);
+	}
 
 
 	res.json({
