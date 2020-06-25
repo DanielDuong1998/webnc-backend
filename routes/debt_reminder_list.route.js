@@ -27,6 +27,7 @@ router.post('/', async (req, res)=>{
 
 	//xac thuc stk_nguoi_nhan
 	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
+	const stk_nguoi_gui = req.body.stk_nguoi_gui;
 	const rows = await verifyStkTT(stk_nguoi_nhan);
 	if(rows.length === 0){
 		return res.json({
@@ -59,6 +60,24 @@ router.post('/', async (req, res)=>{
 	console.log('entity: ', entity);
 
 	await debt_reminder_listModel.add(entity);
+
+	//socketIO
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	let listId = [];
+	listSocket.forEach(e =>{
+		if(e.stk === stk_nguoi_nhan){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body
+	});
+	delete debtNotification.stk_nguoi_nhan;
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit('debt', debtNotification);
+	});
 
 	res.json({
 		status: 1,
