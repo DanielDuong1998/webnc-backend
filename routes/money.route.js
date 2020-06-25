@@ -5,6 +5,8 @@ const momentTz = require('moment-timezone');
 const userModel = require('../models/user.model');
 const history_send_receiveModel = require('../models/history_send_receive.model');
 const history_add_money_by_employeeModel = require('../models/history_add_money_by_employee.model');
+const notificationModel = require('../models/notification.model');
+
 const config = require('../config/default.json');
 
 const router = express.Router();
@@ -36,13 +38,6 @@ router.post('/send-money-user', async(req, res)=>{
 	let phi_money = 0;
 	let thuc_nhan = +so_tien_gui;
 	//xac thuc thong tin nguoi nhan	
-	// const verify = await verifyInfoStk(stk_nguoi_nhan);
-	// if(verify === false){
-	// 	return res.json({
-	// 		status: -1,
-	// 		msg: 'stk_nguoi_nhan is incorrect'
-	// 	});
-	// }
 
 	const ten_nguoi_nhan = await nameByStk(stk_nguoi_nhan);
 	if(ten_nguoi_nhan.length === 0){
@@ -94,6 +89,38 @@ router.post('/send-money-user', async(req, res)=>{
 	});
 
 	await history_send_receiveModel.add(entity);
+
+	//socket io
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	console.log('list socket: ', listSocket);
+	let listId = [];
+
+	listSocket.forEach(e =>{
+		if(e.stk === stk_nguoi_nhan){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body
+	});
+	console.log('length list: ', listId);
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit('receiveMoney', debtNotification);
+	});
+
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_nguoi_nhan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: 0
+		});
+
+		await notificationModel.add(entityNoti);
+	}
 
 	res.json({
 		status: 1,
