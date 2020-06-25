@@ -140,6 +140,7 @@ router.post('/delete', async(req, res)=>{
 	const {stk_nguoi_gui, stk_nguoi_nhan} = rows[0];
 	var io = req.app.get('io');
 	var listSocket = req.app.get('listSocket');
+	console.log('list socket: ', listSocket);
 	let listId = [];
 
 	let stkTT = stk_nguoi_nhan;
@@ -164,7 +165,7 @@ router.post('/delete', async(req, res)=>{
 
 	if(listId.length === 0){
 		let entityNoti = ({
-			stk_thanh_toan: stk_nguoi_nhan,
+			stk_thanh_toan: stkTT,
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
