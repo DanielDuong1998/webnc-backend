@@ -15,7 +15,7 @@
 		"expiresIn": "10m"
 	},
 	"foreignBank": {
-		"partnerCode": ["NHN2", "xyz"],
+		"partnerCode": ["b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr", "7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA"],
 		"secretSign": "secretSign",
 		"delayTime": 300000,
 		"minimumMoney": 50000

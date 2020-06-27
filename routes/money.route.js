@@ -24,7 +24,7 @@ router.post('/send-money-user', async(req, res)=>{
 	// body = {
 		// "stk_nguoi_gui": "123456789",
 		// "stk_nguoi_nhan": "450516872",
-		// "ten_gui_gui": ""
+		// "ten_nguoi_gui": ""
 		// "so_tien_gui": "300000",
 		// "noi_dung": "tra luong thang 6",
 		// "phi" : "0"

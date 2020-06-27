@@ -6,6 +6,10 @@ const moment = require('moment');
 const bodyparser = require('body-parser');
 require('express-async-errors');
 
+//test request
+const request = require('request');
+const momentTz = require('moment-timezone');
+const sha256 = require('sha256');
 
 
 const mdwFunc = require('./middlewares/auth.mdw');
@@ -29,10 +33,43 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.json());
 
 //cmt
-app.get('/', (req, res)=>{
-	res.json({
-		msg: 'This is api of Smart Banking - nodejs'
+app.get('/', async (req, res)=>{
+	//start request 
+	const partnerCode = 'b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr';
+	const time = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	const body = ({
+		"stk_thanh_toan" : "123456789"
 	});
+	const str = JSON.stringify(body) + time + 'secretSign' + partnerCode;
+	const sign = sha256(str);
+	// const sign = 
+
+	const options = {
+		url: 'https://smartbankinghk.herokuapp.com/api/foreign-bank/info',
+		headers: {
+			'x-partner-code': partnerCode,
+			'x-timestamp': time,
+			'x-sign': str
+		},
+		method: 'POST',
+		body: body,
+		json: true
+	};
+
+	const callback = (err, response, body)=>{
+		if (err) throw err;
+		console.log('body: ', body);
+		res.json(body);
+	}
+
+	request(options, callback);
+	//end request
+
+
+	// res.json({
+	// 	msg: 'This is api of Smart Banking - nodejs'
+	// });
+	
 });
 
 app.use('/api/user', require('./routes/user.route'));

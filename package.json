@@ -26,6 +26,7 @@
     "node-rsa": "^1.0.8",
     "nodemailer": "^6.4.8",
     "rand-token": "^1.0.1",
+    "request": "^2.88.2",
     "sha256": "^0.2.0",
     "socket.io": "^2.3.0",
     "util": "^0.12.3"
