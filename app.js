@@ -24,14 +24,10 @@ app.use(cors());
 
 //socketio
 const server = require('http').Server(app);
+
 var io = require('socket.io')(server);
 require('./socketio.js')(io, listSocket);
-server.listen(process.env.PORT || 45202, _=>{
-	if(process.env.PORT){
-		console.log(`socket io is running at https://smartbankinghk.herokuapp.com`);
-	}
-	else console.log(`socket io is running at http://localhost:${45202}`);
-});
+
 
 app.set('listSocket', listSocket);
 app.set('io', io);
@@ -143,9 +139,15 @@ app.use(function(err, req, res, next){
 });
 
 const PORT = 3000;
-app.listen(process.env.PORT || PORT, _=>{
+server.listen(process.env.PORT || PORT, _=>{
 	if(process.env.PORT){
-		console.log(`API is running at https://smartbankinghk.herokuapp.com`);
+		console.log(`APP io is running at https://smartbankinghk.herokuapp.com`);
 	}
-	else console.log(`API is running at http://localhost:${PORT}`);
-})
+	else console.log(`APP io is running at http://localhost:${PORT}`);
+});
+// app.listen(process.env.PORT || PORT, _=>{
+// 	if(process.env.PORT){
+// 		console.log(`API is running at https://smartbankinghk.herokuapp.com`);
+// 	}
+// 	else console.log(`API is running at http://localhost:${PORT}`);
+// })
