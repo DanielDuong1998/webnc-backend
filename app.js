@@ -20,6 +20,8 @@ const mdwFunc = require('./middlewares/auth.mdw');
 const app = express();
 var listSocket = [];
 
+app.use(cors());
+
 //socketio
 const server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -35,7 +37,6 @@ app.set('listSocket', listSocket);
 app.set('io', io);
 
 app.use(morgan('dev'));
-app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.json());
