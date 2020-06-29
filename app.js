@@ -10,6 +10,9 @@ require('express-async-errors');
 const request = require('request');
 const momentTz = require('moment-timezone');
 const sha256 = require('sha256');
+const jwt = require('jsonwebtoken');
+const key = require('./config/RSAKey');
+const openpgp = require('openpgp');
 
 
 const mdwFunc = require('./middlewares/auth.mdw');
@@ -21,7 +24,12 @@ var listSocket = [];
 const server = require('http').Server(app);
 var io = require('socket.io')(server);
 require('./socketio.js')(io, listSocket);
-server.listen(45202);
+server.listen(process.env.PORT || 45202, _=>{
+	if(process.env.PORT){
+		console.log(`socket io is running at https://smartbankinghk.herokuapp.com`);
+	}
+	else console.log(`socket io is running at http://localhost:${45202}`);
+});
 
 app.set('listSocket', listSocket);
 app.set('io', io);
@@ -35,22 +43,55 @@ app.use(express.json());
 //cmt
 app.get('/', async (req, res)=>{
 	//start request 
-	const partnerCode = 'b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr';
-	const time = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
-	const body = ({
-		"stk_thanh_toan" : "123456789"
+
+	const secretString = 'Internet-banking--group-2';
+	const getIssuedAtNow = _=>{
+		return momentTz.tz('Asia/Bangkok').unix();
+	}
+
+	const payload = {
+		desAccountNumber: '1111000000001',
+    	desBankCode: 'GROUP2Bank',
+    	iat: getIssuedAtNow()
+	}
+
+	const x_hashed_data = await jwt.sign({payload}, secretString, {algorithm: "HS256", expiresIn: "10m"})
+
+	const headers = ({
+		x_hashed_data
 	});
-	const str = JSON.stringify(body) + time + 'secretSign' + partnerCode;
-	const sign = sha256(str);
-	// const sign = 
+
+	const data = {
+	    desAccountNumber: '1111000000001',
+	    desBankCode: 'GROUP2Bank',
+	    iat: getIssuedAtNow()
+	}
+
+	const dataString = JSON.stringify(data);
+
+	const encrypted_data = async  _=> {
+	    await openpgp.initWorker();
+
+	    const publicKeyArmored = key.pubKey(0);
+
+	    const { data: encrypted } = await openpgp.encrypt({
+	        message: openpgp.message.fromText(dataString), // input as Message object
+	        publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys, // for encryption
+	    });
+
+	    openpgp.destroyWorker();
+
+	    return encrypted;
+	}
+
+	const ed = await encrypted_data();
+	const body = ({
+		'encrypted_data': ed
+	});
 
 	const options = {
-		url: 'https://smartbankinghk.herokuapp.com/api/foreign-bank/info',
-		headers: {
-			'x-partner-code': partnerCode,
-			'x-timestamp': time,
-			'x-sign': str
-		},
+		url: 'https://api-server-internet-banking.herokuapp.com/other-banks/query-account-information',
+		headers: headers,
 		method: 'POST',
 		body: body,
 		json: true
@@ -82,6 +123,7 @@ app.use('/api/bank', require('./routes/bank.route'));
 app.use('/api/history-money', require('./routes/history_money.route'));
 app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 app.use('/api/account', require('./routes/account.route'));
+app.use('/api/money-partner-group2', require('./routes/money_partner_group2.route'));
 
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));

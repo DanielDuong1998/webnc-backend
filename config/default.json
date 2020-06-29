@@ -5,9 +5,9 @@
 	    "acquireTimeout"  : 3600000,
 	    "timeout"         : 3600000,
 		"host": "sql12.freemysqlhosting.net",
-		"password": "infrRiRmli",
-		"user": "sql12350088", 
-		"database": "sql12350088"
+		"password": "NeMiTvE9YY",
+		"user": "sql12351469", 
+		"database": "sql12351469"
 	},
 	"auth": {
 		"secretPassword": ["userSecretKey", "employeeSecretKey", "adminSecretKey"],
@@ -18,7 +18,17 @@
 		"partnerCode": ["b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr", "7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA"],
 		"secretSign": "secretSign",
 		"delayTime": 300000,
-		"minimumMoney": 50000
+		"minimumMoney": 50000,
+		"group2": {
+			"secretString": "Internet-banking--group-2",
+			"desBankCode": "GROUP2Bank",
+			"urlInfo": "https://api-server-internet-banking.herokuapp.com/other-banks/query-account-information",
+			"urlAddMoney": "https://api-server-internet-banking.herokuapp.com/other-banks/payment-on-account",
+			"jwt": {
+				"algorithm": "HS256",
+				"expiresIn": "10M"
+			}
+		}
 	},
 	"otp": {
 		"duration": 300000,
