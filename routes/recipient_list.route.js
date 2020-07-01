@@ -43,6 +43,8 @@ router.post('/', async (req, res)=>{
 		// });
 	// }
 
+	console.log('body: ', req.body);
+
 	const row = await nameByStkTT(stkNN);
 	if(row.length === 0){
 		return res.json({
@@ -75,6 +77,7 @@ router.post('/', async (req, res)=>{
 	else {
 		const ret = ({
 			...req.body,
+			ten_goi_nho: ten,
 			status: 1
 		});
 		console.log('ret: ', ret);

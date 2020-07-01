@@ -21,11 +21,15 @@ module.exports = {
 	},
 	listSendReceive: entity=>{
 		let field = 'stk_nguoi_gui';
+		let fieldJoin = 'stk_nguoi_nhan'
 		if(entity.type === 1){
 			field = 'stk_nguoi_nhan';
+			fieldJoin = 'stk_nguoi_gui';
 		}
 
-		const sql = `select debt_reminder_list.*, user.ten from debt_reminder_list, user where trang_thai <> 1 and ${field} = '${entity.stkTT}' and debt_reminder_list.${field} = user.stk_thanh_toan`;
+		console.log('field: ', field);
+
+		const sql = `select debt_reminder_list.*, user.ten from debt_reminder_list, user where trang_thai <> 1 and ${field} = '${entity.stkTT}' and debt_reminder_list.${fieldJoin} = user.stk_thanh_toan`;
 		return db.load(sql);
 	}
 }

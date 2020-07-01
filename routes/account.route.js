@@ -76,6 +76,10 @@ router.post('/employee', async (req, res)=>{
 });
 
 router.get('/employee', async (req, res)=>{
+	// headers = {
+	// 	x-access-token: 'asdfge21a32d1ga23e1asdf'
+	// }
+
 	const list = await accountModel.allEmployee();
 	list.forEach(e=>{
 		delete e.refresh_token;
@@ -88,6 +92,30 @@ router.get('/employee', async (req, res)=>{
 		status: 1,
 		list
 	});
+});
+
+//xóa account employee
+router.put('/delete-employee', async(req, res)=>{
+	// body = {
+	// 	id: 1
+	// }
+
+	const id = req.body.id;
+	// kiem tra id co ton tai hay khong
+	const row = await accountModel.singleEmployeeById(id);
+	if(row.length === 0){
+		return res.json({
+			status: -1,
+			msg: 'id was not exist or not an employee'
+		});
+	}
+
+	await accountModel.deleteEmployee(id);
+	res.json({
+		status: 1,
+		msg: `delete id ${id} success`
+	});
+
 });
 
 

@@ -11,6 +11,7 @@ module.exports = {
 		console.log('hash account pw: ', entity.mat_khau);
 		return db.add(entity, 'account')
 	},
+	singleEmployeeById: id=> db.load(`select * from account where id = '${id}' and role = 0`),
 	singleRowAccount: entity =>{
 		const sql = `select * from account where tai_khoan = '${entity.tai_khoan}' and role = ${entity.role}`;
 		return db.load(sql);
@@ -31,6 +32,10 @@ module.exports = {
 	updateRefreshToken: (id, token) =>{
 		const rdt = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 		const sql = `update account set refresh_token = '${token}', rdt = '${rdt}' where id = ${id}`;
+		return db.load(sql);
+	},
+	deleteEmployee: id=>{
+		const sql = `update account set trang_thai = 0 where id = ${id} and role = 0`;
 		return db.load(sql);
 	}
 }
