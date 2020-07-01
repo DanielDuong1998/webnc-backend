@@ -73,8 +73,11 @@ router.post('/', async (req, res)=>{
 		}
 	});
 
+	const ret = await userModel.nameByStkTT(stk_nguoi_gui);
+
 	let debtNotification = ({
-		...req.body
+		...req.body,
+		ten_nguoi_gui: ret[0].ten
 	});
 	delete debtNotification.stk_nguoi_nhan;
 	listId.forEach(e =>{
