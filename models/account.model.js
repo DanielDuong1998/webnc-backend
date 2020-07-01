@@ -3,8 +3,8 @@ const momentTz = require('moment-timezone');
 const db = require('../utils/db');
 
 module.exports = {
-	allAdmin: _=> db.load('select * from account where role = 1'),
-	allEmployee: _=> db.load('select * from account where role = 0'),
+	allAdmin: _=> db.load('select * from account where role = 1 and trang_thai = 1'),
+	allEmployee: _=> db.load('select * from account where role = 0 and trang_thai = 1'),
 	add: entity => {
 		const hash = bcrypt.hashSync(entity.mat_khau, 8);
 		entity.mat_khau = hash;

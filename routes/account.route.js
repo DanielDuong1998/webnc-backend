@@ -33,6 +33,7 @@ router.post('/admin', async (req, res)=>{
 	const ngay_tao = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
 	entity.ngay_tao = ngay_tao;
 	entity.role = 1;
+	entity.trang_thai = 1;
 
 	await accountModel.add(entity);
 
@@ -62,6 +63,7 @@ router.post('/employee', async (req, res)=>{
 	const ngay_tao = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD');
 	entity.ngay_tao = ngay_tao;
 	entity.role = 0;
+	entity.trang_thai = 1;
 
 	await accountModel.add(entity);
 
@@ -70,6 +72,21 @@ router.post('/employee', async (req, res)=>{
 		msg: 'create employee account success',
 		tai_khoan,
 		mat_khau: '123456'
+	});
+});
+
+router.get('/employee', async (req, res)=>{
+	const list = await accountModel.allEmployee();
+	list.forEach(e=>{
+		delete e.refresh_token;
+		delete e.mat_khau;
+		delete e.trang_thai;
+		delete e.rdt;
+		delete e.role;
+	});
+	res.json({
+		status: 1,
+		list
 	});
 });
 

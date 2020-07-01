@@ -47,7 +47,7 @@ app.get('/', async (req, res)=>{
 	}
 
 	const payload = {
-		desAccountNumber: '1111000000001',
+		desAccountNumber: '1111000000002',
     	desBankCode: 'GROUP2Bank',
     	iat: getIssuedAtNow()
 	}
@@ -59,7 +59,7 @@ app.get('/', async (req, res)=>{
 	});
 
 	const data = {
-	    desAccountNumber: '1111000000001',
+	    desAccountNumber: '1111000000002',
 	    desBankCode: 'GROUP2Bank',
 	    iat: getIssuedAtNow()
 	}
