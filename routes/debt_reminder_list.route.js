@@ -156,8 +156,18 @@ router.post('/delete', async(req, res)=>{
 		}
 	});
 
+	const nguoi_xoa = +req.body.nguoi_xoa;
+	let stk_nguoi_xoa = '';
+	if(nguoi_xoa === 1){
+		stk_nguoi_xoa = stk_nguoi_nhan;
+	}
+	else stk_nguoi_xoa = stk_nguoi_gui;
+
+	const ret = await userModel.nameByStkTT(stk_nguoi_xoa);
+
 	let debtNotification = ({
-		...req.body
+		...req.body,
+		ten_nguoi_xoa: ret[0].ten
 	});
 	listId.forEach(e =>{
 		io.to(`${e.id}`).emit(`deleteDebt${req.body.nguoi_xoa}`, debtNotification);
