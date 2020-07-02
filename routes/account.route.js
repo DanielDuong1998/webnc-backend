@@ -118,6 +118,60 @@ router.put('/delete-employee', async(req, res)=>{
 
 });
 
+//update rank for employee
+router.put('/rank', async(req, res)=>{
+	// body = {
+	// 	"tai_khoan": "520872967493",
+	// 	"so_bac": "2" //
+	// }
+	const tai_khoan = req.body.tai_khoan;
+	const so_bac = +req.body.so_bac;
+
+	if(tai_khoan.length !== 12){ // reject luon khi tai_khoan khong du 12, khoi query db
+		return res.json({
+			status: -1,
+			msg: 'tai_khoan is not exist!'
+		});
+	}
+	if(so_bac < -10 || so_bac > 10){
+		return res.json({
+			status: -2,
+			msg: 'so_bac is not valid'
+		});
+	}
+
+	const entity = ({
+		tai_khoan,
+		role: 0
+	});
+	const rows = await accountModel.singleRowAccount(entity);
+	if(rows.length === 0){
+		return res.json({
+			status: -1,
+			msg: 'tai_khoan is not exist!'
+		});
+	}
+
+	let rankAfter = so_bac + rows[0].cap_bac;
+	console.log('rankAfter: ', rankAfter);
+	if(rankAfter < 1) rankAfter = 1;
+	else if (rankAfter > 17) rankAfter = 17;
+
+	const he_so_luong = rankAfter + 6;
+
+	const entity2 = ({
+		tai_khoan,
+		rankAfter,
+		he_so_luong
+	});	
+	await accountModel.updateRank(entity2);
+
+	res.json({
+		status: 1,
+		msg: `completed up rank for ${tai_khoan}`
+	});
+});
+
 
 const generateAccount = async type=> { //1 la employee, 2 la admin
 	const startNum = config.user.startStkGen[type];
