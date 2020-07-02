@@ -13,7 +13,7 @@ module.exports = {
 	},
 	singleEmployeeById: id=> db.load(`select * from account where id = '${id}' and role = 0`),
 	singleRowAccount: entity =>{
-		const sql = `select * from account where tai_khoan = '${entity.tai_khoan}' and role = ${entity.role}`;
+		const sql = `select * from account where tai_khoan = '${entity.tai_khoan}' and role = ${entity.role} and trang_thai = 1`;
 		return db.load(sql);
 	},
 	verifyAccount: async entity=>{
