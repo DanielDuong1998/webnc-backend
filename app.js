@@ -122,6 +122,9 @@ app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 app.use('/api/account', require('./routes/account.route'));
 app.use('/api/money-partner-group2', require('./routes/money_partner_group2.route'));
 
+//test smartbanking
+app.use('/api/smartbanking', require('./routes/smartbanking.route'));
+
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));
 

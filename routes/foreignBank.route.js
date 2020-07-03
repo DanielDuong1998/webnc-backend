@@ -22,6 +22,7 @@ router.get('/', async (req, res)=> {
 
 
 router.post('/info', async(req, res) =>{
+
 	let { stk_thanh_toan } = req.body;
 	if(stk_thanh_toan === undefined){
 		return res.json({

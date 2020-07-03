@@ -16,6 +16,7 @@ router.get('', (req, res)=>{
 	});
 });
 
+// lấy thông tin qua stk 
 router.post('/info', async(req, res)=>{
 	// body = {
 	// 	"stk_thanh_toan": "1111000000001" 
@@ -71,11 +72,66 @@ router.post('/info', async(req, res)=>{
 	// });
 });
 
+// nap tiền
 router.post('/add-money', async(req, res)=>{
+	// body = {
+		// "stk_nguoi_gui": "1234567891234"
+		// "stk_nguoi_nhan": "1111000000001",
+		// "so_tien": "1000000",
+	 // "noi_dung": "chuyen luong"
+	// }
 
+	const srcAccountNumber = req.body.stk_nguoi_gui;
+	const money = +req.body.so_tien;
+	const srcBankCode = 'smartbanking';
+	const desAccountNumber = req.body.stk_nguoi_nhan;
+	const { desBankCode, secretString, urlAddMoney } = config.foreignBank.group2;
+	const content = req.body.noi_dung;
+
+	const { algorithm, expiresIn } = config.foreignBank.group2.jwt;
+	const payload = {
+		srcAccountNumber,
+		srcBankCode,
+		desAccountNumber,
+		desBankCode,
+		money,
+		content,
+		iat: getIssuedAtNow()
+	};
+
+	const x_hashed_data = await jwt.sign({payload}, secretString, {algorithm, expiresIn});
+	const headers = ({
+		x_hashed_data
+	});
+
+	const data = {
+		srcAccountNumber,
+		srcBankCode,
+		desAccountNumber,
+		desBankCode,
+		money,
+		content,
+		iat: getIssuedAtNow()
+	};
+
+	const dataString = JSON.stringify(data);
+	const encrypted_data = await encrypted_dataF(dataString);
+	const signed_data = await sign_dataF(dataString);
+
+	const body = ({
+		encrypted_data,
+		signed_data
+	});
+
+	console.log('headers: ', headers);
+	console.log('body: ', body);
+
+
+	res.json({
+		status: 1, 
+		msg: 'api nap tien cua ngan hang group 2'
+	})
 });
-
-
 
 
 const getIssuedAtNow = _=>{
@@ -95,6 +151,29 @@ const encrypted_dataF = async  dataString=> {
     openpgp.destroyWorker();
 
     return encrypted;
+}
+
+const sign_dataF = async dataString=>{
+	await openpgp.initWorker();
+
+    const privateKeyArmored = 'YOUR PRIVATE KEY'; // encrypted private key
+    const passphrase = 'YOUR PASSPHRASE'; // what the private key is encrypted with
+
+    const {
+        keys: [privateKey]
+    } = await openpgp.key.readArmored(privateKeyArmored);
+    await privateKey.decrypt(passphrase);
+
+    const {
+        data: cleartext
+    } = await openpgp.sign({
+        message: openpgp.cleartext.fromText(dataString), // CleartextMessage or Message object
+        privateKeys: [privateKey] // for signing
+    });
+
+    openpgp.destroyWorker();
+
+    return cleartext;
 }
 
 
