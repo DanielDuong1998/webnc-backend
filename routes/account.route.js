@@ -64,6 +64,8 @@ router.post('/employee', async (req, res)=>{
 	entity.ngay_tao = ngay_tao;
 	entity.role = 0;
 	entity.trang_thai = 1;
+	entity.cap_bac = 1;
+	entity.he_so_luong = 6.0;
 
 	await accountModel.add(entity);
 
@@ -97,25 +99,60 @@ router.get('/employee', async (req, res)=>{
 //xóa account employee
 router.put('/delete-employee', async(req, res)=>{
 	// body = {
-	// 	id: 1
+	// 	tai_khoan: 1
 	// }
 
-	const id = req.body.id;
+	const tai_khoan = req.body.tai_khoan;
 	// kiem tra id co ton tai hay khong
-	const row = await accountModel.singleEmployeeById(id);
+	const row = await accountModel.singleEmployeeByTk(tai_khoan);
 	if(row.length === 0){
 		return res.json({
 			status: -1,
-			msg: 'id was not exist or not an employee'
+			msg: 'tai_khoan was not exist or not an employee'
 		});
 	}
 
+	const id = row[0].id;
 	await accountModel.deleteEmployee(id);
 	res.json({
 		status: 1,
-		msg: `delete id ${id} success`
+		msg: `delete account ${tai_khoan} success`
 	});
 
+});
+
+router.put('/info', async(req, res)=>{
+	// body = {
+		// "tai_khoan": "579476719233",
+		// "dia_chi": "Lạng Sơn",
+		// "ten": "Dương Khang 1"
+	// }
+
+	let entity = {};
+	const tai_khoan = req.body.tai_khoan;
+	const dia_chi = req.body.dia_chi;
+	const ten = req.body.ten;
+	if(dia_chi !== undefined && dia_chi.length !== 0){
+		entity.dia_chi = dia_chi;
+	}
+
+	if(ten !== undefined && ten.length !== 0){
+		entity.ten = ten;
+	}
+
+	if(entity.ten === undefined & entity.dia_chi === undefined){
+		return res.json({
+			status: -1,
+			msg: 'ten and dia_chi not valid'
+		});
+	}
+
+	await accountModel.udNameAdressByEntity(entity, tai_khoan);
+
+	res.json({
+		status: 1,
+		msg: 'update info success'
+	});
 });
 
 //update rank for employee
