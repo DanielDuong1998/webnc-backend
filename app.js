@@ -13,6 +13,7 @@ const sha256 = require('sha256');
 const jwt = require('jsonwebtoken');
 const key = require('./config/RSAKey');
 const openpgp = require('openpgp');
+const jwtDecode = require('jwt-decode');
 
 
 const mdwFunc = require('./middlewares/auth.mdw');
@@ -41,72 +42,14 @@ app.use(express.json());
 app.get('/', async (req, res)=>{
 	//start request 
 
-	const secretString = 'Internet-banking--group-2';
-	const getIssuedAtNow = _=>{
-		return momentTz.tz('Asia/Bangkok').unix();
-	}
 
-	const payload = {
-		desAccountNumber: '1111000000002',
-    	desBankCode: 'GROUP2Bank',
-    	iat: getIssuedAtNow()
-	}
+	const jwtDecode = require('jwt-decode');
+	let tk = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU5NDA1MzQ1MCwiZXhwIjoxNTk0MDU0MDUwfQ.hKQmXMyFX8KiXLWH-3FLuvWRZSN12godLxuQiRf6Nf4';
+	let payload = jwtDecode(tk);
+	console.log('pl: ', payload); //{ userId: 1, iat: 1594053450, exp: 1594054050 }
+	
 
-	const x_hashed_data = await jwt.sign({payload}, secretString, {algorithm: "HS256", expiresIn: "10m"})
-
-	const headers = ({
-		x_hashed_data
-	});
-
-	const data = {
-	    desAccountNumber: '1111000000002',
-	    desBankCode: 'GROUP2Bank',
-	    iat: getIssuedAtNow()
-	}
-
-	const dataString = JSON.stringify(data);
-
-	const encrypted_data = async  _=> {
-	    await openpgp.initWorker();
-
-	    const publicKeyArmored = key.pubKey(0);
-
-	    const { data: encrypted } = await openpgp.encrypt({
-	        message: openpgp.message.fromText(dataString), // input as Message object
-	        publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys, // for encryption
-	    });
-
-	    openpgp.destroyWorker();
-
-	    return encrypted;
-	}
-
-	const ed = await encrypted_data();
-	const body = ({
-		'encrypted_data': ed
-	});
-
-	const options = {
-		url: 'https://api-server-internet-banking.herokuapp.com/other-banks/query-account-information',
-		headers: headers,
-		method: 'POST',
-		body: body,
-		json: true
-	};
-
-	const callback = (err, response, body)=>{
-		if (err) throw err;
-		console.log('body: ', body);
-		res.json(body);
-	}
-
-	request(options, callback);
-	//end request
-
-
-	// res.json({
-	// 	msg: 'This is api of Smart Banking - nodejs'
-	// });
+	res.json('a');
 	
 });
 
