@@ -164,12 +164,12 @@ router.post('/add-money', (req, res)=>{
 		let verify = publicKey.verify(ts, rsaSignRes, 'utf8', 'base64');
 		if(verify === true){
 			// xac thuc thanh cong => chuyen tien thanh cong 
-			res.json(body);
+			return res.json(body);
 		}
 		else {
 			// xac thuc that bai => response co the khong tin cay
 			body.msg = 'authentication rsaSign failed';
-			res.json(body);
+			return res.json(body);
 		}
 
 		res.json(body);

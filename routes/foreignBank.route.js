@@ -110,7 +110,7 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	console.log('partnerCode: ', partnerCode);
 	let index = config.foreignBank.partnerCode.findIndex(e=>{
 		return e === partnerCode;
-	})
+	});
 	index++;
 
 	let entity = ({
