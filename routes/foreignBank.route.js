@@ -1,10 +1,13 @@
 const express = require('express');
 const moment = require('moment');
 const NodeRSA = require('node-rsa');
+const momentTz = require('moment-timezone');
 
 const foreignBankModel = require('../models/foreignBank.model');
 const userModel = require('../models/user.model');
 const history_partner_bankModel = require('../models/history_partner_bank.model');
+const bankModel = require('../models/bank.model');
+const notificationModel = require('../models/notification.model');
 
 require('express-async-errors');
 
@@ -125,6 +128,42 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	});
 
 	await history_partner_bankModel.add(entity);
+	const name = await bankModel.nameById(index);
+	
+	//socket io
+	var io = req.app.get('io');
+	var listSocket = req.app.get('listSocket');
+	console.log('list socket: ', listSocket);
+	let listId = [];
+
+	//lấy hết tất cả id có stk = stk_thanh_toan gôm lại vào list id
+	listSocket.forEach(e =>{
+		if(e.stk === stk_thanh_toan){
+			listId.push(e);
+		}
+	});
+
+	let debtNotification = ({
+		...req.body,
+		ten_ngan_hang: name[0].ten
+	});
+
+	console.log('length list: ', listId);
+	listId.forEach(e =>{
+		io.to(`${e.id}`).emit('receiveMoneyOtherBank', debtNotification);
+	});
+
+	if(listId.length === 0){
+		let entityNoti = ({
+			stk_thanh_toan: stk_thanh_toan,
+			noi_dung: JSON.stringify(debtNotification),
+			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
+			trang_thai: 0,
+			type: 6
+		});
+
+		await notificationModel.add(entityNoti);
+	}
 
 	res.json({
 		status: 1,

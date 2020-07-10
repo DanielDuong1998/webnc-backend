@@ -96,6 +96,7 @@ router.post('/send-money-user', async(req, res)=>{
 	console.log('list socket: ', listSocket);
 	let listId = [];
 
+	//lấy hết tất cả id có stk = stk_nguoi_nhan gôm lại vào list id
 	listSocket.forEach(e =>{
 		if(e.stk === stk_nguoi_nhan){
 			listId.push(e);
@@ -105,6 +106,7 @@ router.post('/send-money-user', async(req, res)=>{
 	let debtNotification = ({
 		...req.body
 	});
+
 	console.log('length list: ', listId);
 	listId.forEach(e =>{
 		io.to(`${e.id}`).emit('receiveMoney', debtNotification);
