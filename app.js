@@ -64,9 +64,10 @@ app.use('/api/history-money', require('./routes/history_money.route'));
 app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 app.use('/api/account', require('./routes/account.route'));
 app.use('/api/money-partner-group2', require('./routes/money_partner_group2.route'));
+app.use('/api/history-admin', require('./routes/history_partner_bank.route'));
 
 //test smartbanking
-app.use('/api/smartbanking', require('./routes/smartbanking.route'));
+app.use('/api/smartbanking', require('./routes/smartbanking/smartbanking.route'));
 
 
 app.use('/api/foreign-bank', mdwFunc.verifyGetInfoForeign, require('./routes/foreignBank.route'));

@@ -122,15 +122,18 @@ router.post('/add-money', (req, res)=>{
 	// body = {
 		// "stk_nguoi_gui" : "0987654321", //stk người gui tien (thuoc ngan hang cua ban)
 		// "stk_nguoi_nhan": "1234567891234", //stk nguoi nhan tien (thuoc ngan hang cua minh)
+		// "ten_nguoi_gui": "Trương Hoàng Minh",
 		// "so_tien": 1000000,
 		// "noi_dung": "tra luong thang 13"
 	// }
 	const { stk_nguoi_gui, noi_dung } = req.body;
 	const stk_thanh_toan = req.body.stk_nguoi_nhan;
 	const soTien = req.body.so_tien;
+	const ten_nguoi_gui = req.body.ten_nguoi_gui;
 	const body = ({
 		stk_nguoi_gui,
 		stk_thanh_toan,
+		ten_nguoi_gui,
 		soTien,
 		noi_dung
 	});
@@ -141,7 +144,7 @@ router.post('/add-money', (req, res)=>{
 	let signRsa = privateKey.sign(timestamp, 'base64', 'utf8');
 	headers['x-rsa-sign'] = signRsa;
 
-	const url = host1 + urlMoney;
+	const url = host2 + urlMoney;
 
 	const options = ({
 		url: url,
