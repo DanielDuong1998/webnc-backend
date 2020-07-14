@@ -15,7 +15,7 @@
 		"expiresIn": "10m"
 	},
 	"foreignBank": {
-		"partnerCode": ["b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr", "7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA"],
+		"partnerCode": ["b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr", "7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA", "FJEAE5jvynLDr0asyDC5BW5LFk0k4vOicY3En46KGRfOgGmdOPYqSXRBON8MHAH1cSa7zo3F0ZN27xro"],
 		"secretSign": "secretSign",
 		"delayTime": 300000,
 		"minimumMoney": 50000,

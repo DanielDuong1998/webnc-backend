@@ -38,16 +38,12 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.json());
 
+
+
 //cmt
 app.get('/', async (req, res)=>{
 	//start request 
 
-
-	const jwtDecode = require('jwt-decode');
-	let tk = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU5NDA1MzQ1MCwiZXhwIjoxNTk0MDU0MDUwfQ.hKQmXMyFX8KiXLWH-3FLuvWRZSN12godLxuQiRf6Nf4';
-	let payload = jwtDecode(tk);
-	console.log('pl: ', payload); //{ userId: 1, iat: 1594053450, exp: 1594054050 }
-	
 
 	res.json('a');
 	
