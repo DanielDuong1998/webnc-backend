@@ -127,8 +127,7 @@ router.post('/delete', async(req, res)=>{
 	}
 
 
-	let tg_xoa = moment().format('YYYY-MM-DD HH:mm:ss');
-	tg_xoa = momentTz(tg_xoa).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	let tg_xoa = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 
 	let entity = ({
 		noi_dung_xoa: req.body.noi_dung_xoa,
@@ -313,6 +312,10 @@ router.post('/list-send', async(req, res)=>{
 		stkTT: stk_nguoi_gui
 	})
 	const list = await debt_reminder_listModel.listSendReceive(entity);
+	list.forEach(e=>{
+		e.tg_tao = momentTz(e.tg_tao).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+		e.tg_xoa = momentTz(e.tg_xoa).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	});
 
 	res.json({
 		status: 1,
@@ -331,6 +334,10 @@ router.post('/list-receive', async(req, res)=>{
 		stkTT: stk_nguoi_nhan
 	})
 	const list = await debt_reminder_listModel.listSendReceive(entity);
+	list.forEach(e=>{
+		e.tg_tao = momentTz(e.tg_tao).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+		e.tg_xoa = momentTz(e.tg_xoa).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	});
 
 	res.json({
 		status: 1,
