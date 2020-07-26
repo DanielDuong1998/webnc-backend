@@ -1,6 +1,10 @@
 const express = require('express');
 const request = require('request');
 const NodeRSA = require('node-rsa');
+const momentTz = require('moment-timezone');
+
+const userModel = require('../models/user.model.js');
+const history_partner_bankModel = require('../models/history_partner_bank.model');
 
 const key = require('../config/RSAKey');
 const config = require('../config/default.json');
@@ -61,11 +65,38 @@ router.post('/info', async(req, res)=>{
 router.post('/add-money', async(req, res)=>{
 	// body = {
 	// 	"stk_nguoi_gui": "1234567891234",
-	// 	"stk_nguoi_nhan": "9001654734322",
+	// 	"stk_nguoi_nhan": "1234567891011",
+	//  "ten_nguoi_nhan": "Ân Hòa",
 	// 	"noi_dung": "chuyen tien xay nha",
 	// 	"so_tien": "5000000",
 	// 	"type": 2 //nguoi nhan chiu phi
 	// }
+
+	//check tien co du de chuyen hay khong
+	const entity = ({
+		stk_nguoi_gui: req.body.stk_nguoi_gui,
+		so_tien: +req.body.so_tien
+	});
+
+	let verify = await checkMoneyByStkTT(entity);
+	if(verify === -1){
+		return res.json({
+			status: -1,
+			msg: 'stkTT khong ton tai'
+		});
+	}
+	else if(verify === -2){
+		return res.json({
+			status: -2,
+			msg: 'so du hien tai nho hon so tien'
+		});
+	}
+
+	// console.log('verify: ', verify);
+	// return res.json({
+	// 	msg: 'test'
+	// });
+
 
 	const body = ({
 		from: req.body.stk_nguoi_gui,
@@ -104,16 +135,65 @@ router.post('/add-money', async(req, res)=>{
 		json: true
 	};
 
-	const callback = (err, response, body)=>{
+	const {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung} = req.body;
+
+	const callback = async (err, response, body)=>{
 		if(err) throw err;
 		console.log('body: ', body);
-		console.log('sign: ', body.signNature);
+		console.log('sig: ', response.body.signNature);
+		let verifySign = pubKey.verify(JSON.stringify(response.body.payload + response.body.timeStamp), response.body.signNature, 'utf8', 'base64');
+		console.log('verifySign: ', verifySign);
+		if(verifySign === true){
+			await subMoney(entity);
+			let ret = ({
+				stk_nguoi_gui,
+				stk_nguoi_nhan,
+				ten_nguoi_nhan,
+				so_tien,
+				noi_dung
+			});
+			await saveHistory(ret);
+		}
 		res.json(body);
 	}
 
 	request(options, callback);
 	
 });
+
+const checkMoneyByStkTT = async entity=>{
+	let {stk_nguoi_gui, so_tien} = entity;
+	let rows = await userModel.singleByStkTT(stk_nguoi_gui);
+	if(rows.length === 0){ //stkTT khong ton tai
+		return -1;
+	}
+	const real_money = +rows[0].so_du_hien_tai;
+	if(so_tien <= real_money){ // so du hien tai lon hon ho so tien chuyen
+		return 1;
+	}
+	return -2;
+}
+
+const subMoney = async entity=>{
+	let {stk_nguoi_gui, so_tien} = entity;
+	await userModel.subMoney(stk_nguoi_gui, so_tien);
+}
+
+const saveHistory = async entity=>{
+	let {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung} = entity;
+	let thoi_gian = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	let ret = ({
+		stk_doi_tac: stk_nguoi_nhan,
+		stk_noi_bo: stk_nguoi_gui,
+		ten_doi_tac: ten_nguoi_nhan,
+		so_tien,
+		noi_dung,
+		thoi_gian,
+		type: 0,
+		id_ngan_hang_doi_tac: 2
+	});
+	await history_partner_bankModel.add(ret);
+}
 
 
 //lấy thông tin

@@ -50,6 +50,8 @@ router.post('/info', async(req, res)=>{
 		encrypted_data
 	});
 
+	console.log('body: ', body);
+	console.log('headers: ', headers);
 	const options = {
 		url: urlInfo,
 		headers,
