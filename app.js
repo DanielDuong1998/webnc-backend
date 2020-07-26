@@ -14,6 +14,8 @@ const jwt = require('jsonwebtoken');
 const key = require('./config/RSAKey');
 const openpgp = require('openpgp');
 const jwtDecode = require('jwt-decode');
+const randToken = require('rand-token');
+
 
 
 const mdwFunc = require('./middlewares/auth.mdw');
@@ -44,8 +46,10 @@ app.use(express.json());
 app.get('/', async (req, res)=>{
 	//start request 
 
+	refresh_token = randToken.generate(80);
+	console.log('token: ', refresh_token);
 
-	res.json('a');
+	res.json(refresh_token);
 	
 });
 

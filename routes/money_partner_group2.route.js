@@ -143,7 +143,7 @@ const getIssuedAtNow = _=>{
 const encrypted_dataF = async  dataString=> {
     await openpgp.initWorker();
 
-    const publicKeyArmored = key.pubKey(0);
+    const publicKeyArmored = key.pgpPubKey(0);
 
     const { data: encrypted } = await openpgp.encrypt({
         message: openpgp.message.fromText(dataString), // input as Message object
@@ -159,7 +159,7 @@ const sign_dataF = async dataString=>{
 	await openpgp.initWorker();
 
     const privateKeyArmored = 'YOUR PRIVATE KEY'; // encrypted private key
-    const passphrase = 'YOUR PASSPHRASE'; // what the private key is encrypted with
+    const passphrase = '2ymWut79nLCdJIHE6gGODlprdC6cfRXH7e4CI1Tc4EcZkf7VIm7dSABgQS19lle06WHxNvETuGdArT1V'; // what the private key is encrypted with
 
     const {
         keys: [privateKey]

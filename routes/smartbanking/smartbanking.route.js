@@ -6,7 +6,7 @@ const NodeRSA = require('node-rsa');
 
 const router = express.Router();
 
-const x_partner_code = '7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA';
+const x_partner_code = 'b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr';
 const secretSign  = 'secretSign';
 const host1 = 'https://smartbankinghk.herokuapp.com';
 const host2 = 'http://localhost:3000';
@@ -14,58 +14,73 @@ const urlInfo = '/api/foreign-bank/info';
 const urlMoney = '/api/foreign-bank/add-money'
 
 const privateKeyStr = `-----BEGIN RSA PRIVATE KEY-----
-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
+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
 -----END RSA PRIVATE KEY-----`;
 
 const publicKeyStr = `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAp9uFUIw1oPunfsD2J8TN
+CNixDVOp2Mo0HKJO+MQd01zbu6d9cjzAOfKToK6pQsU11WSQfmY7uiyv9+V5mAEl
+idLJ54e1wROb/ZJnsbPwYxXLNX5XFZm6wpMCuC9KrWB6N5+SbX4kFHnPzso4C4rL
+Vsr9mbWeaBJiTawxhmu4tn+a5Y7oU7uS2chW+Td492v3d4/IY28JRCsvJLV64Yaz
+fMapwD0M2quHOFyDXo9Jdhdv49Vd+tYNT9zDYMNKSu/90AGxtJb1GfD5Hvpq8WcY
+TwAS6w1LxHdvGGD/lHglHj+2w4Fq9opeOTdXznOfFZXDFXiZ1YfhJdqLVsH+Vns+
+84Jso6h9wy9/jGVAIMFC06LXO1VetjwVWzFGrCO5xelz5Tbj+dYdvhwS0gbRvrgb
+rfzooE8vQ8cFlpgQtnWzXrgjrLXDpgfPugNFAsVvit6ivYrjve6QkJEg3WjdTk0s
+HqCjdrADrBoL030R9oX/iYb3xNRW0g6DZI9pwbnKwH+0gBy59J+mmfmUHl8Wqgbm
+Kp58cNC6BvwlnSs///x1znHxs+vTG0NyIEvsUUKkzuF4LmfArfgcdCIGIa7Mp7DW
+5tIHt6ORgGcsh00B/YyCt/ke0vvdrDtO6UlFaGHzgqAF30OG9qPNFpzd0CgrQXLx
+V7OtkQpPFTXgIHfPo3kQbcsCAwEAAQ==
+-----END PUBLIC KEY-----`;
+
+const pubKeyVerifySign = `-----BEGIN PUBLIC KEY-----
 MIICITANBgkqhkiG9w0BAQEFAAOCAg4AMIICCQKCAgB5NqBS6gT/H+hEfpRZNKee
 VO6AxT/hHtcrMmWG9NuVtT/hQltYYidru7o45y9Xw8fb9xNcF/kKRBBNQyp5g7Wa
 jt7nn8SyR8T9/ftOO2VihQwMKh8U1Or3BBSvJmrxfHl6qNpTVN8zicnL8ZccbXAg
@@ -144,7 +159,7 @@ router.post('/add-money', (req, res)=>{
 	let signRsa = privateKey.sign(timestamp, 'base64', 'utf8');
 	headers['x-rsa-sign'] = signRsa;
 
-	const url = host2 + urlMoney;
+	const url = host1 + urlMoney;
 
 	const options = ({
 		url: url,
@@ -160,14 +175,14 @@ router.post('/add-money', (req, res)=>{
 		const ts = body.timeStamp;
 		if(rsaSignRes === undefined || ts === undefined) return res.json(body);
 
-		let publicKey = new NodeRSA(publicKeyStr);
+		let publicKey = new NodeRSA(pubKeyVerifySign);
 		let verify = publicKey.verify(ts, rsaSignRes, 'utf8', 'base64');
 		if(verify === true){
 			// xac thuc thanh cong => chuyen tien thanh cong 
 			return res.json(body);
 		}
 		else {
-			// xac thuc that bai => response co the khong tin cay
+			// xac thuc that bai => response có thể không đáng tin cậy
 			body.msg = 'authentication rsaSign failed';
 			return res.json(body);
 		}
