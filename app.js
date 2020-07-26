@@ -60,6 +60,7 @@ app.use('/api/history-money', require('./routes/history_money.route'));
 app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 app.use('/api/account', require('./routes/account.route'));
 app.use('/api/money-partner-group2', require('./routes/money_partner_group2.route'));
+app.use('/api/money-partner-group15', require('./routes/money_partner_group15.route'));
 app.use('/api/history-admin', require('./routes/history_partner_bank.route'));
 
 //test smartbanking

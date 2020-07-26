@@ -19,7 +19,7 @@ router.get('', (req, res)=>{
 // lấy thông tin qua stk 
 router.post('/info', async(req, res)=>{
 	// body = {
-	// 	"stk_thanh_toan": "1111000000001" 
+		// "stk_thanh_toan": "1111000000001" 
 	// }
 
 	const { secretString, desBankCode, urlInfo } = config.foreignBank.group2;

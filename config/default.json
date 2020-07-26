@@ -28,6 +28,12 @@
 				"algorithm": "HS256",
 				"expiresIn": "10M"
 			}
+		},
+		"group15": {
+			"partnerCode": "e19d66c2ef51c9aed8d532bb11f08ed6",
+			"secretKey": "JaNdRgUjXn2r5u8x/A?D(G+KbPeShVmYp3s6v9y$B&E)H@McQfTjWnZr4t7w!z%C",
+			"urlInfo": "https://api.monca.me/v1/rsa/info",
+			"urlAddMoney": "https://api.monca.me/v1/rsa/transfers"
 		}
 	},
 	"otp": {

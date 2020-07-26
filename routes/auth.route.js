@@ -150,8 +150,8 @@ router.post('/', async(req, res)=>{
 //refresh token
 router.post('/refresh', async(req, res)=>{
  	// req.body = {
- 	// 	accessToken,
- 	// 	refreshToken
+ 		// accessToken,
+ 		// refreshToken
  	// }
  	console.log('secret: ', config.auth.secretPassword[0]);
  	jwt.verify(req.body.accessToken, config.auth.secretPassword[0], {ignoreExpiration: true}, async function(err, payload){

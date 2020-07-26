@@ -277,7 +277,8 @@ router.post('/pay', async(req, res)=>{
 	});
 
 	let debtNotification = ({
-		...req.body
+		...req.body,
+		so_tien: rows[0].so_tien
 	});
 	listId.forEach(e =>{
 		io.to(`${e.id}`).emit('payDebt', debtNotification);
