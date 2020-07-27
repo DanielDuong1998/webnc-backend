@@ -54,10 +54,17 @@ router.post('/info', async(req, res)=>{
 	const callback = (err, response, body)=>{
 		if(err) throw err;
 		console.log('body: ', body);
-		body = (body.data ?{
-			 data: {
-				ten: body.data.name
-			}}: {message : body.message
+		body = (
+			body.data 
+			? 
+			{
+			 	data: {
+					ten: body.data.name
+				}
+			}
+			: 
+			{
+				message : body.message
 			} 
 		);
 		res.json(body);
@@ -70,12 +77,12 @@ router.post('/info', async(req, res)=>{
 // nap tiền
 router.post('/add-money', async(req, res)=>{
 	// body = {
-	// 	"stk_nguoi_gui": "1234567891234",
-	// 	"stk_nguoi_nhan": "1234567891011",
-	//  "ten_nguoi_nhan": "Ân Hòa",
-	// 	"noi_dung": "chuyen tien xay nha",
-	// 	"so_tien": "5000000",
-	// 	"type": 2 //nguoi nhan chiu phi
+		// "stk_nguoi_gui": "1234567891234",
+		// "stk_nguoi_nhan": "1234567891011",
+	 // "ten_nguoi_nhan": "Ân Hòa",
+		// "noi_dung": "chuyen tien xay nha",
+		// "so_tien": "5000000",
+		// "type": 2 //nguoi nhan chiu phi
 	// }
 
 	//check tien co du de chuyen hay khong
@@ -159,6 +166,8 @@ router.post('/add-money', async(req, res)=>{
 				noi_dung
 			});
 			await saveHistory(ret);
+
+			body.status = 1;
 		}
 		res.json(body);
 	}
