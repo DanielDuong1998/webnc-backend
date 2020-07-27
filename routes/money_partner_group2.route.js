@@ -63,6 +63,11 @@ router.post('/info', async(req, res)=>{
 	const callback = (err, response, body)=>{
 		if(err) throw err;
 		console.log('body: ', body);
+		body = ({
+			data: {
+				ten: body.desAccountName
+			}
+		});
 		res.json(body);
 	}
 

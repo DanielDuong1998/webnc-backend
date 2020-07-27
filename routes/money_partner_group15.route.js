@@ -54,6 +54,12 @@ router.post('/info', async(req, res)=>{
 	const callback = (err, response, body)=>{
 		if(err) throw err;
 		console.log('body: ', body);
+		body = (body.data ?{
+			 data: {
+				ten: body.data.name
+			}}: {message : body.message
+			} 
+		);
 		res.json(body);
 	}
 
