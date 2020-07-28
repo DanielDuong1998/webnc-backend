@@ -53,8 +53,9 @@ app.get('/', async (req, res)=>{
 	
 });
 
-app.use('/api/user', require('./routes/user.route'));
 app.use('/api/auth', require('./routes/auth.route'));
+
+app.use('/api/user', mdwFunc.verifyJWT, require('./routes/user.route'));
 app.use('/api/otp', require('./routes/otp.route'));
 app.use('/api/saving-account', require('./routes/saving_account.route'));
 app.use('/api/recipient-list', require('./routes/recipient_list.route'));

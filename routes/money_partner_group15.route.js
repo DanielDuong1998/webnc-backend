@@ -163,7 +163,8 @@ router.post('/add-money', async(req, res)=>{
 				stk_nguoi_nhan,
 				ten_nguoi_nhan,
 				so_tien,
-				noi_dung
+				noi_dung,
+				sign: body.signNature
 			});
 			await saveHistory(ret);
 
@@ -195,7 +196,7 @@ const subMoney = async entity=>{
 }
 
 const saveHistory = async entity=>{
-	let {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung} = entity;
+	let {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung, sign} = entity;
 	let thoi_gian = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 	let ret = ({
 		stk_doi_tac: stk_nguoi_nhan,
@@ -205,7 +206,8 @@ const saveHistory = async entity=>{
 		noi_dung,
 		thoi_gian,
 		type: 0,
-		id_ngan_hang_doi_tac: 2
+		id_ngan_hang_doi_tac: 1,
+		sign
 	});
 	await history_partner_bankModel.add(ret);
 }

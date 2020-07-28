@@ -8,6 +8,10 @@ const openpgp = require('openpgp');
 const key = require('../config/RSAKey');
 const config = require('../config/default.json');
 
+const userModel = require('../models/user.model');
+const history_partner_bankModel = require('../models/history_partner_bank.model');
+
+
 const router = express.Router();
 
 router.get('', (req, res)=>{
@@ -85,8 +89,9 @@ router.post('/add-money', async(req, res)=>{
 		// "stk_nguoi_gui": "1234567891234"
 		// "stk_nguoi_nhan": "1111000000001",
 		// "so_tien": "1000000",
-	 // "noi_dung": "chuyen luong"
+	 // 	"noi_dung": "chuyen luong"
 	// }
+
 
 	const srcAccountNumber = req.body.stk_nguoi_gui;
 	const money = +req.body.so_tien;
@@ -130,14 +135,48 @@ router.post('/add-money', async(req, res)=>{
 		signed_data
 	});
 
-	console.log('headers: ', headers);
-	console.log('body: ', body);
+	// console.log('headers: ', headers);
+	// console.log('body: ', body);
+
+	const options = {
+		url: urlAddMoney,
+		headers,
+		method: 'POST',
+		body,
+		json: true
+	};
+
+	const {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung} = req.body;
+	const entity = ({
+		stk_nguoi_gui: req.body.stk_nguoi_gui,
+		so_tien: +req.body.so_tien
+	});
+
+	const callback = async (err, response, body)=>{
+		if(err) throw err;
+		console.log('body: ', body);
+		body.status = body.status || 1;
+		await subMoney(entity);
+		let ret = ({
+			stk_nguoi_gui,
+			stk_nguoi_nhan,
+			ten_nguoi_nhan,
+			so_tien,
+			noi_dung,
+			"sign": body.signedData
+		});
+		console.log('ret: ', ret);
+		await saveHistory(ret);
+		res.json(body);
+	}
+
+	request(options, callback);
 
 
-	res.json({
-		status: 1, 
-		msg: 'api nap tien cua ngan hang group 2'
-	})
+	// res.json({
+	// 	status: 1, 
+	// 	msg: 'api nap tien cua ngan hang group 2'
+	// })
 });
 
 
@@ -163,12 +202,10 @@ const encrypted_dataF = async  dataString=> {
 const sign_dataF = async dataString=>{
 	await openpgp.initWorker();
 
-    const privateKeyArmored = 'YOUR PRIVATE KEY'; // encrypted private key
-    const passphrase = '2ymWut79nLCdJIHE6gGODlprdC6cfRXH7e4CI1Tc4EcZkf7VIm7dSABgQS19lle06WHxNvETuGdArT1V'; // what the private key is encrypted with
+    const privateKeyArmored = key.pgpPriKey(0); // encrypted private key
+    const passphrase = config.foreignBank.group2.pgpStr.passphrase; // what the private key is encrypted with
 
-    const {
-        keys: [privateKey]
-    } = await openpgp.key.readArmored(privateKeyArmored);
+    const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
     await privateKey.decrypt(passphrase);
 
     const {
@@ -181,6 +218,28 @@ const sign_dataF = async dataString=>{
     openpgp.destroyWorker();
 
     return cleartext;
+}
+
+const subMoney = async entity=>{
+	let {stk_nguoi_gui, so_tien} = entity;
+	await userModel.subMoney(stk_nguoi_gui, so_tien);
+}
+
+const saveHistory = async entity=>{
+	let {stk_nguoi_gui, stk_nguoi_nhan, ten_nguoi_nhan, so_tien, noi_dung, sign} = entity;
+	let thoi_gian = momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	let ret = ({
+		stk_doi_tac: stk_nguoi_nhan,
+		stk_noi_bo: stk_nguoi_gui,
+		ten_doi_tac: ten_nguoi_nhan,
+		so_tien,
+		noi_dung,
+		thoi_gian,
+		type: 0,
+		id_ngan_hang_doi_tac: 2,
+		sign
+	});
+	await history_partner_bankModel.add(ret);
 }
 
 

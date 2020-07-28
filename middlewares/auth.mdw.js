@@ -148,7 +148,7 @@ const verifyJWTf = (req, accessToken)=>{
 		ret.msg = 'do not find access token';
 	}
 
-	jwt.verify(accessToken, config.auth.secretPassword, function(err, payload){
+	jwt.verify(accessToken, config.auth.secretPassword[0], function(err, payload){
 		console.log('payload: ', payload);
 		if(err) {
 			console.log('err: ', err);
@@ -196,9 +196,10 @@ const verifyRSA = (req)=>{
 module.exports = {
 	verifyJWT: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
+		console.log('headers: ', req.headers);
 		let verify = verifyJWTf(req, accessToken);
 		console.log('verify: ', verify);
-		if(verify.status === -4){
+		if(verify.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
 		}

@@ -27,6 +27,9 @@
 			"jwt": {
 				"algorithm": "HS256",
 				"expiresIn": "10M"
+			},
+			"pgpStr": {
+				"passphrase": "2ymWut79nLCdJIHE6gGODlprdC6cfRXH7e4CI1Tc4EcZkf7VIm7dSABgQS19lle06WHxNvETuGdArT1V"
 			}
 		},
 		"group15": {
