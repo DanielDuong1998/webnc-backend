@@ -5,9 +5,9 @@
 	    "acquireTimeout"  : 3600000,
 	    "timeout"         : 3600000,
 		"host": "sql12.freemysqlhosting.net",
-		"password": "CZl83RgrvR",
-		"user": "sql12356319", 
-		"database": "sql12356319"
+		"password": "IwWFSZYFgY",
+		"user": "sql12357399", 
+		"database": "sql12357399"
 	},
 	"auth": {
 		"secretPassword": ["userSecretKey", "employeeSecretKey", "adminSecretKey"],
