@@ -56,17 +56,19 @@ app.get('/', async (req, res)=>{
 app.use('/api/auth', require('./routes/auth.route'));
 
 app.use('/api/user', mdwFunc.verifyJWT, require('./routes/user.route'));
-app.use('/api/otp', require('./routes/otp.route'));
-app.use('/api/saving-account', require('./routes/saving_account.route'));
-app.use('/api/recipient-list', require('./routes/recipient_list.route'));
+app.use('/api/otp', mdwFunc.verifyJWT, require('./routes/otp.route'));
+app.use('/api/saving-account', mdwFunc.verifyJWT, require('./routes/saving_account.route'));
+app.use('/api/recipient-list', mdwFunc.verifyJWT, require('./routes/recipient_list.route'));
+app.use('/api/bank', mdwFunc.verifyJWT, require('./routes/bank.route'));
+app.use('/api/debt-reminder', mdwFunc.verifyJWT, require('./routes/debt_reminder_list.route'));
+app.use('/api/money-partner-group2', mdwFunc.verifyJWT, require('./routes/money_partner_group2.route'));
+app.use('/api/money-partner-group15', mdwFunc.verifyJWT, require('./routes/money_partner_group15.route'));
+
+app.use('/api/history-admin', mdwFunc.verifyJWTAd, require('./routes/history_partner_bank.route'));
+
 app.use('/api/money', require('./routes/money.route'));
-app.use('/api/bank', require('./routes/bank.route'));
 app.use('/api/history-money', require('./routes/history_money.route'));
-app.use('/api/debt-reminder', require('./routes/debt_reminder_list.route'));
 app.use('/api/account', require('./routes/account.route'));
-app.use('/api/money-partner-group2', require('./routes/money_partner_group2.route'));
-app.use('/api/money-partner-group15', require('./routes/money_partner_group15.route'));
-app.use('/api/history-admin', require('./routes/history_partner_bank.route'));
 
 //test smartbanking
 app.use('/api/smartbanking', require('./routes/smartbanking/smartbanking.route'));

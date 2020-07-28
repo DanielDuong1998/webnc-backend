@@ -138,7 +138,7 @@ const verifyForeignLogin = req =>{
 }
 
 
-const verifyJWTf = (req, accessToken)=>{
+const verifyJWTf = (req, accessToken, id)=>{
 	let ret = ({
 		status: -3,
 		msg: ''
@@ -148,7 +148,7 @@ const verifyJWTf = (req, accessToken)=>{
 		ret.msg = 'do not find access token';
 	}
 
-	jwt.verify(accessToken, config.auth.secretPassword[0], function(err, payload){
+	jwt.verify(accessToken, config.auth.secretPassword[id], function(err, payload){
 		console.log('payload: ', payload);
 		if(err) {
 			console.log('err: ', err);
@@ -197,7 +197,31 @@ module.exports = {
 	verifyJWT: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
 		console.log('headers: ', req.headers);
-		let verify = verifyJWTf(req, accessToken);
+		let verify = verifyJWTf(req, accessToken, 0);
+		console.log('verify: ', verify);
+		if(verify.status === -3){
+			console.log('invalid token!');
+			return res.json(verify);
+		}
+		console.log('correct token');
+		next();
+	},
+	verifyJWTAd: (req, res, next) =>{
+		let accessToken = req.headers['x-access-token'];
+		console.log('headers: ', req.headers);
+		let verify = verifyJWTf(req, accessToken, 1);
+		console.log('verify: ', verify);
+		if(verify.status === -3){
+			console.log('invalid token!');
+			return res.json(verify);
+		}
+		console.log('correct token');
+		next();
+	},
+	verifyJWTEm: (req, res, next) =>{
+		let accessToken = req.headers['x-access-token'];
+		console.log('headers: ', req.headers);
+		let verify = verifyJWTf(req, accessToken, 2);
 		console.log('verify: ', verify);
 		if(verify.status === -3){
 			console.log('invalid token!');

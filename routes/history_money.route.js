@@ -36,7 +36,7 @@ router.post('/send', async (req, res)=>{
 
 router.post('/receive', async(req, res)=>{
 	// body = {
-	// 	stk_nguoi_gui: "4505168721234"
+	// 	stk_nguoi_nhan: "4505168721234"
 	// }
 	
 	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;

@@ -5,6 +5,8 @@ const accountModel = require('../models/account.model');
 
 const config = require('../config/default.json');
 
+const mdwFunc = require('./middlewares/auth.mdw');
+
 const router = express.Router();
 
 router.get('/admin', async (req, res)=>{
@@ -15,6 +17,7 @@ router.get('/admin', async (req, res)=>{
 	});
 });
 
+//chức năng để code easy
 router.post('/admin', async (req, res)=>{
 	// body = {
 	// 	"ten": "Dương Khang",
@@ -77,7 +80,8 @@ router.post('/employee', async (req, res)=>{
 	});
 });
 
-router.get('/employee', async (req, res)=>{
+
+router.get('/employee', mdwFunc.verifyJWTAd, async (req, res)=>{
 	// headers = {
 	// 	x-access-token: 'asdfge21a32d1ga23e1asdf'
 	// }
@@ -97,7 +101,7 @@ router.get('/employee', async (req, res)=>{
 });
 
 //xóa account employee
-router.put('/delete-employee', async(req, res)=>{
+router.put('/delete-employee', mdwFunc.verifyJWTAd, async(req, res)=>{
 	// body = {
 	// 	tai_khoan: 1
 	// }
@@ -156,7 +160,7 @@ router.put('/info', async(req, res)=>{
 });
 
 //update rank for employee
-router.put('/rank', async(req, res)=>{
+router.put('/rank', mdwFunc.verifyJWTAd, async(req, res)=>{
 	// body = {
 	// 	"tai_khoan": "520872967493",
 	// 	"so_bac": "2" //

@@ -9,6 +9,8 @@ const notificationModel = require('../models/notification.model');
 
 const config = require('../config/default.json');
 
+const mdwFunc = require('../middlewares/auth.mdw');
+
 const router = express.Router();
 
 router.post('/', async(req, res)=>{
@@ -20,7 +22,7 @@ router.post('/', async(req, res)=>{
 
 
 //người dùng gửi tiền cho người dùng khác, token cua nguoi dung
-router.post('/send-money-user', async(req, res)=>{
+router.post('/send-money-user', mdwFunc.verifyJWT, async(req, res)=>{
 	// body = {
 		// "stk_nguoi_gui": "123456789",
 		// "stk_nguoi_nhan": "450516872",
@@ -131,7 +133,7 @@ router.post('/send-money-user', async(req, res)=>{
 });
 
 //nhân viên nạp tiền cho người dùng,
-router.post('/send-money-employee', async(req, res)=>{ // token cua nhan vien
+router.post('/send-money-employee', mdwFunc.verifyJWTEm, async(req, res)=>{ // token cua nhan vien
 	// body = {
 		// "stk_nguoi_nhan": "1234567891234",
 		// "so_tien_gui": "30000",
