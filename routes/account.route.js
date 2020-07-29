@@ -5,7 +5,7 @@ const accountModel = require('../models/account.model');
 
 const config = require('../config/default.json');
 
-const mdwFunc = require('./middlewares/auth.mdw');
+const mdwFunc = require('../middlewares/auth.mdw');
 
 const router = express.Router();
 
