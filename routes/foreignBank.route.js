@@ -116,6 +116,8 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	});
 	index++;
 
+	const sign = req.headers['x-rsa-sign'];
+
 	let entity = ({
 		stk_doi_tac: stk_nguoi_gui,
 		stk_noi_bo: stk_thanh_toan,
@@ -124,7 +126,8 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 		noi_dung,
 		thoi_gian: ts,
 		type: 1,
-		id_ngan_hang_doi_tac: index 
+		id_ngan_hang_doi_tac: index,
+		sign
 	});
 
 	await history_partner_bankModel.add(entity);
