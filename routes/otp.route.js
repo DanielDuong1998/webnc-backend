@@ -144,7 +144,7 @@ const sendOtpEmail = (email, ma_otp, ten, type, time_expired)=>{
 		<b>Nhập mã ${textEmail} sau đây:</b>
 		<b><h3>${ma_otp}</h3></b>
 		<b>Tuyệt đối không cung cấp mã này cho bất kì ai</b><br>
-		<b>Nếu bạn không yêu cầu mật khẩu mới, hãy bỏ qua email này</b>`
+		<b>Nếu bạn không có yêu cầu ${textSubject}, hãy bỏ qua email này</b>`
 	};
 	transporter.sendMail(mailOption, function(error, info){
 		if(error) return console.log(error);
