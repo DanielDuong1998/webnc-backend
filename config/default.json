@@ -42,7 +42,8 @@
 	"otp": {
 		"duration": 300000,
 		"emailAccount": "smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com",
-		"textEmail": ["đặt lại mật khẩu SmartBanking", "chuyển tiền", "thanh toán nhắc nợ"]
+		"textSubject": ["khôi phục tài khoản SmartBanking", "chuyển tiền", "thanh toán nhắc nợ"],
+		"textEmail": ["đặt lại mật khẩu tài khoản Smartbanking", "chuyển tiền", "thanh toán nhắc nợ"]
 	},
 	"fee": 3000,
 	"user": {

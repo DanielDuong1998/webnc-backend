@@ -4,6 +4,9 @@ const moment = require('moment');
 const history_send_receiveModel = require('../models/history_send_receive.model');
 const history_pay_debtModel = require('../models/history_pay_debt.model');
 
+const mdwFunc = require('../middlewares/auth.mdw');
+
+
 const router = express.Router();
 
 router.get('/', (req, res)=>{
@@ -12,7 +15,7 @@ router.get('/', (req, res)=>{
 	});
 });
 
-router.post('/send', async (req, res)=>{
+router.post('/send', mdwFunc.verifyJWTUsAndEm, async (req, res)=>{
 
 	// body = {
 	// 	stk_nguoi_gui: "1234567891234"
@@ -34,7 +37,7 @@ router.post('/send', async (req, res)=>{
 	});
 });
 
-router.post('/receive', async(req, res)=>{
+router.post('/receive', mdwFunc.verifyJWTUsAndEm, async(req, res)=>{
 	// body = {
 	// 	stk_nguoi_nhan: "4505168721234"
 	// }
@@ -56,7 +59,7 @@ router.post('/receive', async(req, res)=>{
 	});
 });
 
-router.post('/pay-debt', async (req, res)=>{
+router.post('/pay-debt', mdwFunc.verifyJWTUsAndEm, async (req, res)=>{
 	// body = {
 	// 	"stk_nguoi_thanh_toan": "1234567891234"
 	// }
@@ -79,7 +82,7 @@ router.post('/pay-debt', async (req, res)=>{
 	})
 });
 
-router.post('/receive-debt', async (req, res)=>{
+router.post('/receive-debt', mdwFunc.verifyJWTUsAndEm, async (req, res)=>{
 	// body = {
 	// 	"stk_nguoi_nhan": "1234567891234"
 	// }

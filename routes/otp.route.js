@@ -20,6 +20,7 @@ router.post('/', async(req, res)=>{
 	//  "type": 0			//0: quen mk, 1: chuyen tien, 2: thanh toan nhac no
 	// }
 
+	let type = req.body.type || 0;
 	let stk_thanh_toan = req.body.stk_thanh_toan;
 	let entity = ({
 		stk_thanh_toan
@@ -42,10 +43,16 @@ router.post('/', async(req, res)=>{
 	entity.thoi_gian_otp = thoi_gian_otp;
 	entity.ma_otp = ma_otp;
 
+	let duration = +config.otp.duration;
+	duration = duration/60000;
+	let time_expired = momentTz(thoi_gian_otp).add(duration, 'minutes').tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+	console.log('time-expired: ', thoi_gian_otp, '-', time_expired);
+
+
 	let email = idtkEmail[0].email;
 	let ten = idtkEmail[0].ten;
 	console.log('ten: ', ten);
-	sendOtpEmail(email, ma_otp, ten);
+	sendOtpEmail(email, ma_otp, ten, type, time_expired);
 	if(verify === false){ //da tung co ma otp trong tai khoan nay
 		console.log('otp da tung co');
 		await otpModel.ud(entity);
@@ -123,16 +130,18 @@ router.post('/verify', async(req, res)=>{
 	
 });
 
-const sendOtpEmail = (email, ma_otp, ten)=>{
+const sendOtpEmail = (email, ma_otp, ten, type, time_expired)=>{
+	const textSubject = config.otp.textSubject[type];
+	const textEmail = config.otp.textEmail[type];
 	const mailOption = {
 		from: 'Ngân Hàng Smartbank',
 		to: email,
-		subject: `${ma_otp} là mã khôi phục tài khoản SmartBanking của bạn`,
+		subject: `${ma_otp} là mã ${textSubject} của bạn`,
 		text: `You receive massage from smartbankhk.com. Your otp : ${ma_otp}`,
 		html: `<b>Xin chào ${ten},</b><br>
-		<b>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu SmartBanking của bạn.</b><br>
-		<b>Mã chỉ có tác dụng trong vòng 5 phút. Nếu mã hết hạn, vui lòng tạo yêu cầu cấp mã mới </b><br>
-		<b>Nhập mã đặt lại mật khẩu sau đây:</b>
+		<b>Chúng tôi đã nhận được yêu cầu ${textEmail} của bạn.</b><br>
+		<b>Mã chỉ có tác dụng đến ${time_expired} GMT+7. Nếu mã hết hạn, vui lòng tạo yêu cầu cấp mã mới </b><br>
+		<b>Nhập mã ${textEmail} sau đây:</b>
 		<b><h3>${ma_otp}</h3></b>
 		<b>Tuyệt đối không cung cấp mã này cho bất kì ai</b><br>
 		<b>Nếu bạn không yêu cầu mật khẩu mới, hãy bỏ qua email này</b>`

@@ -209,7 +209,7 @@ module.exports = {
 	verifyJWTAd: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
 		console.log('headers: ', req.headers);
-		let verify = verifyJWTf(req, accessToken, 1);
+		let verify = verifyJWTf(req, accessToken, 2);
 		console.log('verify: ', verify);
 		if(verify.status === -3){
 			console.log('invalid token!');
@@ -221,9 +221,22 @@ module.exports = {
 	verifyJWTEm: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
 		console.log('headers: ', req.headers);
-		let verify = verifyJWTf(req, accessToken, 2);
+		let verify = verifyJWTf(req, accessToken, 1);
 		console.log('verify: ', verify);
 		if(verify.status === -3){
+			console.log('invalid token!');
+			return res.json(verify);
+		}
+		console.log('correct token');
+		next();
+	},
+	verifyJWTUsAndEm: (req, res, next) =>{
+		let accessToken = req.headers['x-access-token'];
+		console.log('headers: ', req.headers);
+		let verify = verifyJWTf(req, accessToken, 0);
+		let verify1 = verifyJWTf(req, accessToken, 1);
+		console.log('verify: ', verify);
+		if(verify.status === -3 && verify1.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
 		}
