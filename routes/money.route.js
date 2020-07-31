@@ -120,7 +120,7 @@ router.post('/send-money-user', mdwFunc.verifyJWT, async(req, res)=>{
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
-			type: 0
+			type: 5
 		});
 
 		await notificationModel.add(entityNoti);
@@ -191,7 +191,7 @@ router.post('/send-money-employee', mdwFunc.verifyJWTEm, async(req, res)=>{ // t
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
-			type: 1
+			type: 6
 		});
 
 		await notificationModel.add(entityNoti);

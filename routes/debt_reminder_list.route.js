@@ -90,7 +90,7 @@ router.post('/', async (req, res)=>{
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
-			type: 2
+			type: 1
 		});
 
 		await notificationModel.add(entityNoti);
@@ -149,7 +149,7 @@ router.post('/delete', async(req, res)=>{
 	let type = 3;
 	if(req.body.nguoi_xoa == 1){
 		stkTT = stk_nguoi_gui;
-		type = 4;
+		type = 2;
 	}
 
 	listSocket.forEach(e =>{
@@ -290,7 +290,7 @@ router.post('/pay', async(req, res)=>{
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
-			type: 5
+			type: 4
 		});
 
 		await notificationModel.add(entityNoti);

@@ -162,7 +162,7 @@ router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 			noi_dung: JSON.stringify(debtNotification),
 			thoi_gian: momentTz().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'),
 			trang_thai: 0,
-			type: 6
+			type: 7
 		});
 
 		await notificationModel.add(entityNoti);
