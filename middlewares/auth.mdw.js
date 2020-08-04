@@ -148,6 +148,8 @@ const verifyJWTf = (req, accessToken, id)=>{
 		ret.msg = 'do not find access token';
 	}
 
+	console.log('accessToken: ', accessToken);
+
 	jwt.verify(accessToken, config.auth.secretPassword[id], function(err, payload){
 		console.log('payload: ', payload);
 		if(err) {

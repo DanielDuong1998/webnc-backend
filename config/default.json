@@ -1,21 +1,29 @@
 {
 	"mysql": {
 		"connectionLimit": 1000,
-		"connectTimeout"  : 3600000,
-	    "acquireTimeout"  : 3600000,
-	    "timeout"         : 3600000,
+		"connectTimeout": 3600000,
+		"acquireTimeout": 3600000,
+		"timeout": 3600000,
 		"host": "sql12.freemysqlhosting.net",
-		"password": "IwWFSZYFgY",
-		"user": "sql12357399", 
-		"database": "sql12357399"
+		"password": "tTye2igw5K",
+		"user": "sql12358633",
+		"database": "sql12358633"
 	},
 	"auth": {
-		"secretPassword": ["userSecretKey", "employeeSecretKey", "adminSecretKey"],
+		"secretPassword": [
+			"userSecretKey",
+			"employeeSecretKey",
+			"adminSecretKey"
+		],
 		"refreshTokenSize": 80,
 		"expiresIn": "10m"
 	},
 	"foreignBank": {
-		"partnerCode": ["b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr", "7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA", "FJEAE5jvynLDr0asyDC5BW5LFk0k4vOicY3En46KGRfOgGmdOPYqSXRBON8MHAH1cSa7zo3F0ZN27xro"],
+		"partnerCode": [
+			"b3fn3Tove4Cwhmwiin36sypyhuWsjdmjYygJlHdowK9TclmQV0Fl6MNmfTvaoEi4Y1Mx78AmwOca9Ksr",
+			"7APW008iv5sSF1EWskRdYlyXCFbGJzG0Zseh0Tpj3Fm1AZ6ZMiRFmleIGhf6i7xTkXNDK9b1XgXdnkgA",
+			"FJEAE5jvynLDr0asyDC5BW5LFk0k4vOicY3En46KGRfOgGmdOPYqSXRBON8MHAH1cSa7zo3F0ZN27xro"
+		],
 		"secretSign": "secretSign",
 		"delayTime": 300000,
 		"minimumMoney": 50000,
@@ -42,13 +50,29 @@
 	"otp": {
 		"duration": 300000,
 		"emailAccount": "smtps://smartbankinghk%40gmail.com:Smartbankinghk123456@smtp.gmail.com",
-		"textSubject": ["khôi phục tài khoản SmartBanking", "chuyển tiền", "thanh toán nhắc nợ"],
-		"textEmail": ["đặt lại mật khẩu tài khoản Smartbanking", "chuyển tiền", "thanh toán nhắc nợ"]
+		"textSubject": [
+			"khôi phục tài khoản SmartBanking",
+			"chuyển tiền",
+			"thanh toán nhắc nợ"
+		],
+		"textEmail": [
+			"đặt lại mật khẩu tài khoản Smartbanking",
+			"chuyển tiền",
+			"thanh toán nhắc nợ"
+		]
 	},
 	"fee": 3000,
 	"user": {
-		"startStkGen": [1000000000000, 100000000000, 10000000000], 
-		"endStkGen": [9999999999999, 999999999999, 99999999999]
+		"startStkGen": [
+			1000000000000,
+			100000000000,
+			10000000000
+		],
+		"endStkGen": [
+			9999999999999,
+			999999999999,
+			99999999999
+		]
 	},
 	"debt": {
 		"minDebt": 200000
