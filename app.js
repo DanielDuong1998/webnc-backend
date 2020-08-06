@@ -55,8 +55,8 @@ app.get('/', async (req, res) => {
 
 app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/user', require('./routes/user.route'));
+app.use('/api/otp', require('./routes/otp.route'));
 
-app.use('/api/otp', mdwFunc.verifyJWT, require('./routes/otp.route'));
 app.use('/api/saving-account', mdwFunc.verifyJWT, require('./routes/saving_account.route'));
 app.use('/api/recipient-list', mdwFunc.verifyJWT, require('./routes/recipient_list.route'));
 app.use('/api/bank', mdwFunc.verifyJWT, require('./routes/bank.route'));
