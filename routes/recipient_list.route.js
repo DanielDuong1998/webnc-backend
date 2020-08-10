@@ -25,6 +25,7 @@ router.post('/', async (req, res)=>{
 	// kiem tra stk_thanh_toan co ton tai hay khong
 	const stkTT = req.body.stk_nguoi_gui;
 	const stkNN = req.body.stk_nguoi_nhan;
+	const id_ngan_hang = req.body.id_ngan_hang;
 	let ten = req.body.ten_goi_nho;
 	// let verify = await verifyStkTT(stkTT);
 	// console.log('verify tt: ', verify);
@@ -47,10 +48,12 @@ router.post('/', async (req, res)=>{
 
 	const row = await nameByStkTT(stkNN);
 	if(row.length === 0){
-		return res.json({
-			status: -1,
-			msg: 'stk_nguoi_nhan is incorrect'
-		});
+		if(id_ngan_hang === 0){
+			return res.json({
+				status: -1,
+				msg: 'stk_nguoi_nhan is incorrect'
+			});
+		}
 	}
 
 	if(ten === undefined || ten.length === 0){
@@ -179,13 +182,13 @@ router.put('/delete', async(req, res)=>{
 		});
 	}
 
-	verify = await verifyStkTT(stkNN);
-	if(verify === false){
-		return res.json({
-			status: -2,
-			msg: 'stk_nguoi_nhan is incorrect'
-		});
-	}
+	// verify = await verifyStkTT(stkNN);
+	// if(verify === false){
+	// 	return res.json({
+	// 		status: -2,
+	// 		msg: 'stk_nguoi_nhan is incorrect'
+	// 	});
+	// }
 
 	await recipientModel.del(stkTT, stkNN);
 

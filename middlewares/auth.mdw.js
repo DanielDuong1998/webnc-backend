@@ -16,7 +16,7 @@ const test = req=>{
 	let ts = req.headers['x-timestamp'];
 	let priKey = new NodeRSA(rsaKey.priKey(1));
 	const sign = priKey.sign(ts, 'base64', 'utf8');
-	console.log('signrsa: ', sign);
+	//console.log('signrsa: ', sign);
 }
 
 
@@ -48,7 +48,7 @@ const verifyPartnerCode = (req, partnerCode)=>{
 		status: 1,
 		msg: 'success verify partner code!'
 	});
-	console.log('status-time: ', ret.msg);
+	//console.log('status-time: ', ret.msg);
 	return ret;
 }
 
@@ -73,7 +73,7 @@ const verifyTime = timestamp=>{
 
 	let delayTime = moment(currentTimeTZ).diff(moment(timestampTZ));
 
-	console.log('delayTime: ', delayTime);
+	//console.log('delayTime: ', delayTime);
 	if(delayTime > config.foreignBank.delayTime){
 		ret.msg = 'The package was expired';
 		return ret;
@@ -97,10 +97,10 @@ const verifySign = (req, sign, timestamp, partnerCode)=>{
 
 	
 	let str = JSON.stringify(req.body) + timestamp + config.foreignBank.secretSign + partnerCode;
-	console.log('time: ', timestamp);
-	console.log('sign: ', sign);
+	//console.log('time: ', timestamp);
+	//console.log('sign: ', sign);
 	let signRemake = sha256(str);
-	console.log('signRemake: ', signRemake);
+	//console.log('signRemake: ', signRemake);
 	if(sign !== signRemake){
 		ret.msg = 'The package was changed';
 		return ret;
@@ -148,10 +148,10 @@ const verifyJWTf = (req, accessToken, id)=>{
 		ret.msg = 'do not find access token';
 	}
 
-	console.log('accessToken: ', accessToken);
+	//console.log('accessToken: ', accessToken);
 
 	jwt.verify(accessToken, config.auth.secretPassword[id], function(err, payload){
-		console.log('payload: ', payload);
+		//console.log('payload: ', payload);
 		if(err) {
 			console.log('err: ', err);
 			ret.msg = 'accessToken err';
@@ -182,7 +182,7 @@ const verifyRSA = (req)=>{
 		return ret;
 	}
 
-	console.log('idpartner: ', req.idPartner);
+	//console.log('idpartner: ', req.idPartner);
 	let pubKey = new NodeRSA(rsaKey.pubKey(req.idPartner));
 	let verify = pubKey.verify(timeStamp, rsaSign, 'utf8', 'base64');
 	if(verify === false){
@@ -198,9 +198,9 @@ const verifyRSA = (req)=>{
 module.exports = {
 	verifyJWT: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
-		console.log('headers: ', req.headers);
+		//console.log('headers: ', req.headers);
 		let verify = verifyJWTf(req, accessToken, 0);
-		console.log('verify: ', verify);
+		//console.log('verify: ', verify);
 		if(verify.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
@@ -210,9 +210,9 @@ module.exports = {
 	},
 	verifyJWTAd: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
-		console.log('headers: ', req.headers);
+		//console.log('headers: ', req.headers);
 		let verify = verifyJWTf(req, accessToken, 2);
-		console.log('verify: ', verify);
+		//console.log('verify: ', verify);
 		if(verify.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
@@ -222,9 +222,9 @@ module.exports = {
 	},
 	verifyJWTEm: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
-		console.log('headers: ', req.headers);
+		//console.log('headers: ', req.headers);
 		let verify = verifyJWTf(req, accessToken, 1);
-		console.log('verify: ', verify);
+		//console.log('verify: ', verify);
 		if(verify.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
@@ -234,10 +234,10 @@ module.exports = {
 	},
 	verifyJWTUsAndEm: (req, res, next) =>{
 		let accessToken = req.headers['x-access-token'];
-		console.log('headers: ', req.headers);
+		//console.log('headers: ', req.headers);
 		let verify = verifyJWTf(req, accessToken, 0);
 		let verify1 = verifyJWTf(req, accessToken, 1);
-		console.log('verify: ', verify);
+		//console.log('verify: ', verify);
 		if(verify.status === -3 && verify1.status === -3){
 			console.log('invalid token!');
 			return res.json(verify);
@@ -273,7 +273,7 @@ module.exports = {
 		// }
 
 		let verify = verifyRSA(req);
-		console.log('msg: ', verify.msg);
+		//console.log('msg: ', verify.msg);
 		if(verify.status === -4){
 			return res.json(verify);
 		}
