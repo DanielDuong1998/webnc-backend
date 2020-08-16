@@ -52,22 +52,30 @@ router.post('/info', async(req, res)=>{
 	};
 
 	const callback = (err, response, body)=>{
-		if(err) throw err;
-		console.log('body: ', body);
-		body = (
-			body.data 
-			? 
-			{
-			 	data: {
-					ten: body.data.name
+		try{
+			console.log('body: ', body);
+			body = (
+				body.data 
+				? 
+				{
+					 data: {
+						ten: body.data.name
+					}
 				}
-			}
-			: 
-			{
-				message : body.message
-			} 
-		);
-		res.json(body);
+				: 
+				{
+					message : body.message
+				} 
+			);
+			res.json(body);
+		}
+		catch(e){
+			res.json({
+				status: -1,
+				msg: '404 resource not found'
+			})
+		}
+		
 	}
 
 	request(options, callback);
@@ -152,25 +160,34 @@ router.post('/add-money', async(req, res)=>{
 
 	const callback = async (err, response, body)=>{
 		if(err) throw err;
-		console.log('body: ', body);
-		console.log('sig: ', response.body.signNature);
-		let verifySign = pubKey.verify(JSON.stringify(response.body.payload + response.body.timeStamp), response.body.signNature, 'utf8', 'base64');
-		console.log('verifySign: ', verifySign);
-		if(verifySign === true){
-			await subMoney(entity);
-			let ret = ({
-				stk_nguoi_gui,
-				stk_nguoi_nhan,
-				ten_nguoi_nhan,
-				so_tien,
-				noi_dung,
-				sign: body.signNature
-			});
-			await saveHistory(ret);
-
-			body.status = 1;
+		try{
+			console.log('body: ', body);
+			console.log('sig: ', response.body.signNature);
+			let verifySign = pubKey.verify(JSON.stringify(response.body.payload + response.body.timeStamp), response.body.signNature, 'utf8', 'base64');
+			console.log('verifySign: ', verifySign);
+			if(verifySign === true){
+				await subMoney(entity);
+				let ret = ({
+					stk_nguoi_gui,
+					stk_nguoi_nhan,
+					ten_nguoi_nhan,
+					so_tien,
+					noi_dung,
+					sign: body.signNature
+				});
+				await saveHistory(ret);
+	
+				body.status = 1;
+			}
+			res.json(body);
 		}
-		res.json(body);
+		catch(e){
+			res.json({
+				status: -1,
+				msg: '404 resource not found'
+			})
+		}
+		
 	}
 
 	request(options, callback);
