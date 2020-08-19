@@ -65,14 +65,22 @@ router.post('/info', async(req, res)=>{
 	};
 
 	const callback = (err, response, body)=>{
-		if(err) throw err;
-		console.log('body: ', body);
-		body = ({
-			data: {
-				ten: body.desAccountName
-			}
-		});
-		res.json(body);
+		try{
+			console.log('body: ', body);
+			body = ({
+				data: {
+					ten: body.desAccountName
+				}
+			});
+			res.json(body);
+		}
+		catch(e){
+			res.json({
+				status: -1,
+				msg: "404"
+			});
+		}
+		
 	}
 
 	request(options, callback);
@@ -153,21 +161,29 @@ router.post('/add-money', async(req, res)=>{
 	});
 
 	const callback = async (err, response, body)=>{
-		if(err) throw err;
-		console.log('body: ', body);
-		body.status = body.status || 1;
-		await subMoney(entity);
-		let ret = ({
-			stk_nguoi_gui,
-			stk_nguoi_nhan,
-			ten_nguoi_nhan,
-			so_tien,
-			noi_dung,
-			"sign": body.signedData
-		});
-		console.log('ret: ', ret);
-		await saveHistory(ret);
-		res.json(body);
+		try{
+			console.log('body: ', body);
+			body.status = body.status || 1;
+			await subMoney(entity);
+			let ret = ({
+				stk_nguoi_gui,
+				stk_nguoi_nhan,
+				ten_nguoi_nhan,
+				so_tien,
+				noi_dung,
+				"sign": body.signedData
+			});
+			console.log('ret: ', ret);
+			await saveHistory(ret);
+			res.json(body);
+		}
+		catch(e){
+			res.json({
+				status: -1,
+				msg: "404 resource not found!"
+			})
+		}
+		
 	}
 
 	request(options, callback);

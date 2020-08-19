@@ -138,13 +138,25 @@ const sendOtpEmail = (email, ma_otp, ten, type, time_expired)=>{
 		to: email,
 		subject: `${ma_otp} là mã ${textSubject} của bạn`,
 		text: `You receive massage from smartbankhk.com. Your otp : ${ma_otp}`,
-		html: `<b>Xin chào ${ten},</b><br>
-		<b>Chúng tôi đã nhận được yêu cầu ${textEmail} của bạn.</b><br>
-		<b>Mã chỉ có tác dụng đến ${time_expired} GMT+7. Nếu mã hết hạn, vui lòng tạo yêu cầu cấp mã mới </b><br>
-		<b>Nhập mã ${textEmail} sau đây:</b>
-		<b><h3>${ma_otp}</h3></b>
-		<b>Tuyệt đối không cung cấp mã này cho bất kì ai</b><br>
-		<b>Nếu bạn không có yêu cầu ${textSubject}, hãy bỏ qua email này</b>`
+		html: `<style>
+		body {
+		  background-color: white;
+		  text-align: left;
+		  font-family: Arial, Helvetica, sans-serif;
+		}
+		</style>
+		</head>
+		<body>
+		<a href="https://imgbb.com/"><img src="https://i.ibb.co/fp367Lk/image-2020-6-10-2.png" alt="image-2020-6-10-2" border="0" style="width:150px"/></a>
+		<hr/>
+		<h3>Xin chào ${ten},</h3>
+		  <p>Chúng tôi đã nhận được yêu cầu ${textEmail} của bạn.</p>
+		  <p>Mã chỉ có tác dụng đến <span style="font-weight: bold">${time_expired} GMT+7</span>. Nếu mã hết hạn, vui lòng tạo yêu cầu cấp mã mới </p>
+		  <p>Nhập mã ${textEmail} sau đây:</p>
+		  <span style="border-style: groove; background-color:#cfcfcf; font-weight: bold; font-size:30px">${ma_otp}</span>
+		  <p>Tuyệt đối không cung cấp mã này cho bất kì ai</p>
+		  <p>Nếu bạn không có yêu cầu ${textSubject}, hãy bỏ qua email này</p>
+		</body>`
 	};
 	transporter.sendMail(mailOption, function(error, info){
 		if(error) return console.log(error);
