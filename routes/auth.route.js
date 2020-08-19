@@ -157,7 +157,6 @@ router.post('/refresh', async(req, res)=>{
 	 // }
 	 const access_token = req.body.accessToken;
 	 const refresh_token = req.body.refreshToken;
- 	console.log('secret: ', config.auth.secretPassword[0]);
  	jwt.verify(access_token, config.auth.secretPassword[0], {ignoreExpiration: true}, async function(err, payload){
  		if(err) throw err;
  		console.log('payload: ', payload);
@@ -184,22 +183,28 @@ router.post('/refresh', async(req, res)=>{
  							return res.status(400).json({msg: 'Invalid refresh token.'});
 						}
 						else {
+ 							console.log('secret: ', config.auth.secretPassword[2]);
+
 							const accessToken = generateAccessToken(userId, 2);
 							return res.json({ accessToken });
 						}
 					});c
 				}
 				else {
+ 					console.log('secret: ', config.auth.secretPassword[1]);
+
 					const accessToken = generateAccessToken(userId, 1);
 					return res.json({ accessToken });
 				}
 			});
 
-		 }
-		 else {
+		}
+		else {
+ 			console.log('secret: ', config.auth.secretPassword[0]);
+
 			const accessToken = generateAccessToken(userId, 0);
 			return res.json({ accessToken });
-		 }
+		}
  	});
  });
 

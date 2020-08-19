@@ -152,8 +152,9 @@ const verifyJWTf = (req, accessToken, id)=>{
 
 	jwt.verify(accessToken, config.auth.secretPassword[id], function(err, payload){
 		//console.log('payload: ', payload);
+		console.log('secret: ' + config.auth.secretPassword[id]);
 		if(err) {
-			console.log('err: ', err);
+			console.log('err1: ', err);
 			ret.msg = 'accessToken err';
 		}
 		else {
@@ -226,10 +227,10 @@ module.exports = {
 		let verify = verifyJWTf(req, accessToken, 1);
 		//console.log('verify: ', verify);
 		if(verify.status === -3){
-			console.log('invalid token!');
+			console.log('invalid token! em');
 			return res.json(verify);
 		}
-		console.log('correct token');
+		console.log('correct token em');
 		next();
 	},
 	verifyJWTUsAndEm: (req, res, next) =>{
