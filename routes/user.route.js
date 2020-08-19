@@ -41,7 +41,7 @@ router.post('/', mdwFunc.verifyJWTEm, async (req, res) => {
 		status: 1,
 		id_tai_khoan: result.insertId,
 		ma_pin: "123456",
-		so_du_hien_tai: 50000, //cấu hình này lun
+		so_du_hien_tai: 50000, 
 		...req.body
 	});
 

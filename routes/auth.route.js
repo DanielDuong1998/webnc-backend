@@ -164,21 +164,42 @@ router.post('/refresh', async(req, res)=>{
  		const {userId} = payload;
  		const ret = await userModel.verifyRefreshToken(userId, refresh_token);
 		 
-		 if(ret === false){
+		if(ret === false){
 			 //throw createError(400, 'Invalid refresh token.');
 			 
-			// jwt.verify(access_token, config.auth.secretPassword[1], {ignoreExpiration: true}, async function(err1, payload1){
-			// 	if(err1) throw err1;
-			// 	console.log('payload1: ', payload1);
-			// 	const {userId} = payload1;
-			// 	const ret1 = await 
-			// });
+			jwt.verify(access_token, config.auth.secretPassword[1], {ignoreExpiration: true}, async function(err1, payload1){
+				if(err1) throw err1;
+					console.log('payload1: ', payload1);
 
- 			return res.status(400).json({msg: 'Invalid refresh token.'});
- 		}
+				const {userId} = payload1;
+				const ret1 = await accountModel.verifyRefreshToken(userId, refresh_token);
 
- 		const accessToken = generateAccessToken(userId, 0);
-		res.json({ accessToken });
+				if(ret1 === false){
+					jwt.verify(access_token, config.auth.secretPassword[2], {ignoreExpiration: true}, async function(err2, payload2){
+						if(err2) throw err2;
+
+						const {userId} = payload2;
+						const ret2 = await accountModel.verifyRefreshToken(userId, refresh_token);
+						if(ret2 === false){
+ 							return res.status(400).json({msg: 'Invalid refresh token.'});
+						}
+						else {
+							const accessToken = generateAccessToken(userId, 2);
+							return res.json({ accessToken });
+						}
+					});c
+				}
+				else {
+					const accessToken = generateAccessToken(userId, 1);
+					return res.json({ accessToken });
+				}
+			});
+
+		 }
+		 else {
+			const accessToken = generateAccessToken(userId, 0);
+			return res.json({ accessToken });
+		 }
  	});
  });
 

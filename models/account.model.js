@@ -43,5 +43,13 @@ module.exports = {
 	updateRank: entity=>{
 		const sql = `update account set cap_bac = ${entity.rankAfter}, he_so_luong = ${entity.he_so_luong} where tai_khoan = ${entity.tai_khoan}`;
 		return db.load(sql);
+	},
+	verifyRefreshToken: async (userId, token)=>{
+		const sql = `select * from account where Id = ${userId} and refresh_token = '${token}'`;
+		const rows = await db.load(sql);
+		if(rows.length > 0) 
+			return true;
+		
+		return false;
 	}
 }

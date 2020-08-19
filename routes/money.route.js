@@ -139,6 +139,8 @@ router.post('/send-money-employee', mdwFunc.verifyJWTEm, async(req, res)=>{ // t
 		// "so_tien_gui": "30000",
 		// "tai_khoan": "121578703691"
 	// }
+	
+	console.log("body: " , req.body);
 
 	const stk_nguoi_nhan = req.body.stk_nguoi_nhan;
 	const so_tien_gui = +req.body.so_tien_gui;
