@@ -194,6 +194,8 @@ router.post('/add-money', async(req, res)=>{
 				isExist
 			})
 
+			body.data = data;
+
 			res.json(body);
 		}
 		catch(e){
