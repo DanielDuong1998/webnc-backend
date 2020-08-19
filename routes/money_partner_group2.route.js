@@ -10,6 +10,8 @@ const config = require('../config/default.json');
 
 const userModel = require('../models/user.model');
 const history_partner_bankModel = require('../models/history_partner_bank.model');
+const bankModel = require('../models/bank.model');
+const recipient_listModel = require('../models/recipient_list.model');
 
 
 const router = express.Router();
@@ -165,14 +167,30 @@ router.post('/add-money', async(req, res)=>{
 			console.log('body: ', body);
 			body.status = body.status || 1;
 			await subMoney(entity);
+
+			const id_ngan_hang = 1;
+			const ten = await bankModel.nameById(id_ngan_hang);
+			const isExist = await recipient_listModel.checkInList(srcAccountNumber, desAccountNumber);
+			const data = ({
+				stk_nguoi_gui: srcAccountNumber,
+				stk_nguoi_nhan: desAccountNumber,
+				ten_goi_nho: ten_nguoi_nhan,
+				id_ngan_hang,
+				ten: ten[0],
+				isExist
+			})
+
 			let ret = ({
 				stk_nguoi_gui,
 				stk_nguoi_nhan,
 				ten_nguoi_nhan,
 				so_tien,
 				noi_dung,
-				"sign": body.signedData
+				"sign": body.signedData,
 			});
+
+			body.data = data;
+
 			console.log('ret: ', ret);
 			await saveHistory(ret);
 			res.json(body);

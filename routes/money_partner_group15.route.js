@@ -5,6 +5,8 @@ const momentTz = require('moment-timezone');
 
 const userModel = require('../models/user.model.js');
 const history_partner_bankModel = require('../models/history_partner_bank.model');
+const bankModel = require('../models/bank.model');
+const recipient_listModel = require('../models/recipient_list.model');
 
 const key = require('../config/RSAKey');
 const config = require('../config/default.json');
@@ -165,6 +167,7 @@ router.post('/add-money', async(req, res)=>{
 			console.log('sig: ', response.body.signNature);
 			let verifySign = pubKey.verify(JSON.stringify(response.body.payload + response.body.timeStamp), response.body.signNature, 'utf8', 'base64');
 			console.log('verifySign: ', verifySign);
+			
 			if(verifySign === true){
 				await subMoney(entity);
 				let ret = ({
@@ -179,6 +182,18 @@ router.post('/add-money', async(req, res)=>{
 	
 				body.status = 1;
 			}
+			const id_ngan_hang = 2;
+			const ten = await bankModel.nameById(id_ngan_hang);
+			const isExist = await recipient_listModel.checkInList(stk_nguoi_gui, stk_nguoi_nhan);
+			const data = ({
+				stk_nguoi_gui,
+				stk_nguoi_nhan,
+				ten_goi_nho: ten_nguoi_nhan,
+				id_ngan_hang,
+				ten: ten[0],
+				isExist
+			})
+
 			res.json(body);
 		}
 		catch(e){

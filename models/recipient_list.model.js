@@ -30,5 +30,10 @@ module.exports = {
 	activeRow: (stkTT, stkNN, name)=>{
 		const sql = `update recipient_list set ten_goi_nho = '${name}', status = ${1} where stk_nguoi_gui = '${stkTT}' and stk_nguoi_nhan = '${stkNN}'`;
 		return db.load(sql);
+	},
+	checkInList: async(stkng, stknn)=>{
+		const sql = `select id from recipient_list where stk_nguoi_gui = '${stkng}' and stk_nguoi_nhan = '${stknn}'`;
+		const rows = await db.load(sql);
+		return rows.length > 0;
 	}
 }

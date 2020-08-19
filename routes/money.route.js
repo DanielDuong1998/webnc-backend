@@ -6,6 +6,8 @@ const userModel = require('../models/user.model');
 const history_send_receiveModel = require('../models/history_send_receive.model');
 const history_add_money_by_employeeModel = require('../models/history_add_money_by_employee.model');
 const notificationModel = require('../models/notification.model');
+const bankModel = require('../models/bank.model');
+const recipient_listModel = require('../models/recipient_list.model');
 
 const config = require('../config/default.json');
 
@@ -126,9 +128,24 @@ router.post('/send-money-user', mdwFunc.verifyJWT, async(req, res)=>{
 		await notificationModel.add(entityNoti);
 	}
 
+	const ten = await bankModel.nameById(0);
+	console.log('ten-ngan-hang: ', ten[0]);
+	const isExist = await recipient_listModel.checkInList(stk_nguoi_gui, stk_nguoi_nhan);
+	let data = ({
+		stk_nguoi_gui,
+		stk_nguoi_nhan,
+		ten_goi_nho: ten_nguoi_nhan,
+		id_ngan_hang: 0,
+		ten: ten[0],
+		isExist
+	})
+
+
+
 	res.json({
 		status: 1,
-		msg: 'recharge success'
+		msg: 'recharge success',
+		data
 	});
 });
 

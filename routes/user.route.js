@@ -114,7 +114,7 @@ router.put('/forget-password', async (req, res) => {
 	})
 });
 
-router.post('/info', mdwFunc.verifyJWT, async (req, res) => {
+router.post('/info', mdwFunc.verifyJWTUsAndEm, async (req, res) => {
 	// body = {
 	// 	"stk_thanh_toan": "123456789"
 	// }
