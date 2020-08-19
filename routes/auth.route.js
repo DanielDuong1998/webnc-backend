@@ -158,22 +158,9 @@ router.post('/refresh', async(req, res)=>{
 	 const access_token = req.body.accessToken;
 	 const refresh_token = req.body.refreshToken;
  	jwt.verify(access_token, config.auth.secretPassword[0], {ignoreExpiration: true}, async function(err, payload){
- 		if(err) throw err;
- 		console.log('payload: ', payload);
- 		const {userId} = payload;
- 		const ret = await userModel.verifyRefreshToken(userId, refresh_token);
-		 
-		if(ret === false){
-			 //throw createError(400, 'Invalid refresh token.');
-			 
+ 		if(err) {
 			jwt.verify(access_token, config.auth.secretPassword[1], {ignoreExpiration: true}, async function(err1, payload1){
-				if(err1) throw err1;
-					console.log('payload1: ', payload1);
-
-				const {userId} = payload1;
-				const ret1 = await accountModel.verifyRefreshToken(userId, refresh_token);
-
-				if(ret1 === false){
+				if(err1) {
 					jwt.verify(access_token, config.auth.secretPassword[2], {ignoreExpiration: true}, async function(err2, payload2){
 						if(err2) throw err2;
 
@@ -188,22 +175,42 @@ router.post('/refresh', async(req, res)=>{
 							const accessToken = generateAccessToken(userId, 2);
 							return res.json({ accessToken });
 						}
-					});c
+					});
 				}
 				else {
- 					console.log('secret: ', config.auth.secretPassword[1]);
+					console.log('payload1: ', payload1);
 
-					const accessToken = generateAccessToken(userId, 1);
-					return res.json({ accessToken });
+					const {userId} = payload1;
+					const ret1 = await accountModel.verifyRefreshToken(userId, refresh_token);
+
+					if(ret1 === false){
+						return res.status(400).json({msg: 'Invalid refresh token.'});t
+					}
+					else {
+						console.log('secret: ', config.auth.secretPassword[1]);
+
+						const accessToken = generateAccessToken(userId, 1);
+						return res.json({ accessToken });
+					}
 				}
+				
 			});
-
 		}
 		else {
- 			console.log('secret: ', config.auth.secretPassword[0]);
+			console.log('payload: ', payload);
+			const userId = payload.userId;
+			const ret = await userModel.verifyRefreshToken(userId, refresh_token);
+			
+			if(ret === false){
+				//throw createError(400, 'Invalid refresh token.');
+				return res.status(400).json({msg: 'Invalid refresh token.'});
+			}
+			else {
+				console.log('secret: ', config.auth.secretPassword[0]);
 
-			const accessToken = generateAccessToken(userId, 0);
-			return res.json({ accessToken });
+				const accessToken = generateAccessToken(userId, 0);
+				return res.json({ accessToken });
+			}
 		}
  	});
  });
