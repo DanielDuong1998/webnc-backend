@@ -247,6 +247,19 @@ module.exports = {
 		console.log('correct token');
 		next();
 	},
+	verifyJWTUsAndAd: (req, res, next) =>{
+		let accessToken = req.headers['x-access-token'];
+		//console.log('headers: ', req.headers);
+		let verify = verifyJWTf(req, accessToken, 0);
+		let verify1 = verifyJWTf(req, accessToken, 2);
+		//console.log('verify: ', verify);
+		if(verify.status === -3 && verify1.status === -3){
+			console.log('invalid token!');
+			return res.json(verify);
+		}
+		console.log('correct token');
+		next();
+	},
 	verifyGetInfoForeign: (req, res, next) =>{
 		// req.headers = {
 		// 	"x-partner-code": "",

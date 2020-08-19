@@ -50,7 +50,6 @@ router.post('/info', async(req, res) =>{
 	});
 });
 
-
 router.post('/add-money',mdwFunc.verifyRechargeForeign, async(req, res)=>{
 	// req.body = {
 	// "stk_nguoi_gui": "1111000000001",

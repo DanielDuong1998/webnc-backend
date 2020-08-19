@@ -57,9 +57,10 @@ app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/user', require('./routes/user.route'));
 app.use('/api/otp', require('./routes/otp.route'));
 
+app.use('/api/bank', mdwFunc.verifyJWTUsAndAd, require('./routes/bank.route'));
+
 app.use('/api/saving-account', mdwFunc.verifyJWT, require('./routes/saving_account.route'));
 app.use('/api/recipient-list', mdwFunc.verifyJWT, require('./routes/recipient_list.route'));
-app.use('/api/bank', mdwFunc.verifyJWT, require('./routes/bank.route'));
 app.use('/api/debt-reminder', mdwFunc.verifyJWT, require('./routes/debt_reminder_list.route'));
 app.use('/api/money-partner-group2', mdwFunc.verifyJWT, require('./routes/money_partner_group2.route'));
 app.use('/api/money-partner-group15', mdwFunc.verifyJWT, require('./routes/money_partner_group15.route'));
