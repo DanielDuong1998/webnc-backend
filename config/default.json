@@ -59,7 +59,14 @@
 			"đặt lại mật khẩu tài khoản Smartbanking",
 			"chuyển tiền",
 			"thanh toán nhắc nợ"
-		]
+		],
+		"option": {
+			"service": "Gmail",
+       		"auth": {
+            "user": "smartbankinghk@gmail.com",
+            "pass": "Smartbankinghk123456"
+        }
+		}
 	},
 	"fee": 3000,
 	"user": {

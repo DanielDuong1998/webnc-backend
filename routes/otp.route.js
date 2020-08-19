@@ -11,7 +11,8 @@ const router = express.Router();
 
 const config = require('../config/default.json');
 
-const transporter = nodemailer.createTransport(config.otp.emailAccount);
+// const transporter = nodemailer.createTransport(config.otp.emailAccount);
+const transporter = nodemailer.createTransport(config.otp.option);
 
 
 router.post('/', async(req, res)=>{
