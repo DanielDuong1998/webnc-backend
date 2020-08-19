@@ -16,7 +16,7 @@
 			"adminSecretKey"
 		],
 		"refreshTokenSize": 80,
-		"expiresIn": "1m"
+		"expiresIn": "10m"
 	},
 	"foreignBank": {
 		"partnerCode": [
