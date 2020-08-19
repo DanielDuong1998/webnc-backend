@@ -52,7 +52,6 @@ router.post('/', mdwFunc.verifyJWT, async (req, res) => {
 });
 
 
-//đổi mât khẩu
 router.put('/password', mdwFunc.verifyJWT, async (req, res) => {
 	// body = ({
 	// 	stk_thanh_toan: "123456789",
