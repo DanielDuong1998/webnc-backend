@@ -18,6 +18,8 @@ router.post('/', async(req, res)=>{
 	// 	"ma_pin": "123456"
 	// }
 
+	console.log('body: ',req.body);
+
 	let role, ret;
 	if(req.body.stk_thanh_toan.length === 13){
 		role = 0;
@@ -152,15 +154,26 @@ router.post('/refresh', async(req, res)=>{
  	// req.body = {
  		// accessToken,
  		// refreshToken
- 	// }
+	 // }
+	 const access_token = req.body.accessToken;
+	 const refresh_token = req.body.refreshToken;
  	console.log('secret: ', config.auth.secretPassword[0]);
- 	jwt.verify(req.body.accessToken, config.auth.secretPassword[0], {ignoreExpiration: true}, async function(err, payload){
+ 	jwt.verify(access_token, config.auth.secretPassword[0], {ignoreExpiration: true}, async function(err, payload){
  		if(err) throw err;
  		console.log('payload: ', payload);
  		const {userId} = payload;
- 		const ret = await userModel.verifyRefreshToken(userId, req.body.refreshToken);
- 		if(ret === false){
- 			//throw createError(400, 'Invalid refresh token.');
+ 		const ret = await userModel.verifyRefreshToken(userId, refresh_token);
+		 
+		 if(ret === false){
+			 //throw createError(400, 'Invalid refresh token.');
+			 
+			// jwt.verify(access_token, config.auth.secretPassword[1], {ignoreExpiration: true}, async function(err1, payload1){
+			// 	if(err1) throw err1;
+			// 	console.log('payload1: ', payload1);
+			// 	const {userId} = payload1;
+			// 	const ret1 = await 
+			// });
+
  			return res.status(400).json({msg: 'Invalid refresh token.'});
  		}
 

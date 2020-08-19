@@ -17,7 +17,7 @@ router.get('/', mdwFunc.verifyJWT, async (req, res) => {
 });
 
 //tạo tài khoản
-router.post('/', mdwFunc.verifyJWT, async (req, res) => {
+router.post('/', mdwFunc.verifyJWTEm, async (req, res) => {
 	let verify = await verifyInfoSignUp(req);
 	console.log('verify: ', verify);
 	if (verify.status < 1) {
