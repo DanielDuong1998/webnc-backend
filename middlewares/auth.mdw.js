@@ -154,8 +154,9 @@ const verifyJWTf = (req, accessToken, id)=>{
 		//console.log('payload: ', payload);
 		console.log('secret: ' + config.auth.secretPassword[id]);
 		if(err) {
-			console.log('err1: ', err);
+			console.log('err1: ', err.message);
 			ret.msg = 'accessToken err';
+			return ret;
 		}
 		else {
 			req.tokenPayload = payload;
