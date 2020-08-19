@@ -134,9 +134,9 @@ router.post('/send-money-user', mdwFunc.verifyJWT, async(req, res)=>{
 	let data = ({
 		stk_nguoi_gui,
 		stk_nguoi_nhan,
-		ten_goi_nho: ten_nguoi_nhan,
+		ten_goi_nho: ten_nguoi_nhan[0].ten,
 		id_ngan_hang: 0,
-		ten: ten[0],
+		ten: ten[0].ten,
 		isExist
 	})
 

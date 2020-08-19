@@ -190,7 +190,7 @@ router.post('/add-money', async(req, res)=>{
 				stk_nguoi_nhan,
 				ten_goi_nho: ten_nguoi_nhan,
 				id_ngan_hang,
-				ten: ten[0],
+				ten: ten[0].ten,
 				isExist
 			})
 
